@@ -1,0 +1,21 @@
+weave-viewer-cli — End User License Agreement (EULA)
+
+Copyright (c) 2026 kolore-org. All rights reserved.
+
+STATUS: PLACEHOLDER — terms TBD. Not yet reviewed by counsel.
+
+The `weave-viewer-cli` binary is proprietary, closed-source software. It is
+distributed only as a compiled artifact via this repository's GitHub Releases;
+its source code is not published here. This file is a placeholder for the
+end-user license agreement that governs use of that binary.
+
+The binding copy of this EULA is the one bundled inside each release archive
+alongside the binary. This repository copy is informational.
+
+Final terms (grant of use, restrictions on redistribution/reverse-engineering,
+warranty disclaimer, liability limitation, termination, governing law) are to be
+drafted and reviewed by legal counsel before the first public release.
+
+Note: this EULA covers only the proprietary binary. The other contents of this
+repository — documentation, example projects, the Homebrew formula, and the
+Claude skill — are licensed separately under the Apache License 2.0 (see LICENSE).
