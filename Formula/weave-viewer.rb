@@ -1,27 +1,28 @@
 # Homebrew formula for weave-viewer-cli (macOS arm64, binary release).
 #
-# STAGING DRAFT — kept in the monorepo's docs/satellite-repo/ next to the
-# README. Copy to `Formula/weave.rb` in the kolore-org/homebrew-weave repo when
-# bootstrapping that repo.
+# OWNED BY THIS REPO. The upstream monorepo only builds the binary and attaches
+# `weave-viewer-cli-macos-arm64.tar.gz` (+ `.sha256`, `feature-support.md`) to a
+# `weave-v*` GitHub Release here — it no longer pushes the formula (2026-05-27
+# decouple decision). `version` + `sha256` are bumped on each release by this
+# repo's `.github/workflows/bump-formula.yml` (or manually via
+# `scripts/update-formula.sh`), reading the published `.sha256` asset.
 #
-# This is the SOURCE-OF-TRUTH template. The monorepo release workflow
-# (.github/workflows/release-weave-viewer-cli.yml) auto-fills `version` +
-# `sha256` from each published `weave-v*` release and pushes the result to
-# kolore-org/homebrew-weave/Formula/weave.rb — so the placeholders below are
-# expected here and are replaced automatically on release. (Manual fill, if ever
-# needed: version = tag minus "weave-v"; sha256 = the published
-# `weave-viewer-cli-macos-arm64.tar.gz.sha256` asset.)
-class Weave < Formula
+# Named `weave-viewer` (not `weave`) to avoid colliding with homebrew-core's
+# unrelated `weave`. Install with: brew install kolore-org/weave/weave-viewer
+class WeaveViewer < Formula
   desc "Preview and render weave (HTML/CSS) templates to PNG and MP4"
   homepage "https://github.com/kolore-org/homebrew-weave"
-  version "0.1.0"
-  url "https://github.com/kolore-org/homebrew-weave/releases/download/weave-v#{version}/weave-viewer-cli-macos-arm64.tar.gz"
-  sha256 "a7c10702f193e3155143388116f4b912c5fceb63969738099931421a4dfe6905" # TODO: real release tarball sha256
+  # Version is hardcoded in the URL (not #{version}): Homebrew style requires
+  # `url` before `version`, so interpolation would resolve empty. The bump
+  # workflow/script rewrite the `weave-v<ver>` path segment in lockstep.
+  url "https://github.com/kolore-org/homebrew-weave/releases/download/weave-v0.1.1/weave-viewer-cli-macos-arm64.tar.gz"
+  version "0.1.1"
+  sha256 "630f70caf72393edfd69fa637728dc160403b754239b3b40f663ef04a9e2c415"
   license :cannot_represent # closed binary; examples/docs licensed separately
 
+  depends_on arch: :arm64 # v1 is Apple Silicon only
+  depends_on "ffmpeg" # required by `--record` (MP4 output)
   depends_on :macos
-  depends_on arch: :arm64       # v1 is Apple Silicon only
-  depends_on "ffmpeg"           # required by `--record` (MP4 output)
 
   def install
     # The tarball is a self-contained bundle: the binary plus its runtime
@@ -42,7 +43,7 @@ class Weave < Formula
   test do
     (testpath/"proj").mkpath
     (testpath/"proj/template.weave").write(
-      "<!DOCTYPE html><html><body><div>weave ok</div></body></html>"
+      "<!DOCTYPE html><html><body><div>weave ok</div></body></html>",
     )
     # `--validate` is GPU-free (parses the template + checks override paths).
     # Running it also proves the bundled dylibs resolve at process start and

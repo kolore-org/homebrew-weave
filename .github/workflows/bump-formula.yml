@@ -1,0 +1,71 @@
+name: Bump Homebrew formula on release
+
+# The monorepo builds the binary and publishes a `weave-v*` Release here with
+# assets: weave-viewer-cli-macos-arm64.tar.gz(.sha256) + feature-support.md.
+# It no longer touches the formula (2026-05-27 decouple). This repo owns it:
+# on each release we bump Formula/weave-viewer.rb (version + sha256 from the
+# .sha256 asset) and refresh docs/feature-support.md from the asset.
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to sync (e.g. weave-v0.1.1)"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sync formula + knowledge from the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          TAG="${{ github.event.release.tag_name || github.event.inputs.tag }}"
+          case "$TAG" in
+            weave-v*) ;;
+            *) echo "Tag '$TAG' is not a weave-v* release tag — skipping."; exit 0 ;;
+          esac
+          VERSION="${TAG#weave-v}"
+          echo "Syncing formula to $TAG (version $VERSION)"
+
+          gh release download "$TAG" \
+            --pattern 'weave-viewer-cli-macos-arm64.tar.gz.sha256' \
+            --pattern 'feature-support.md' \
+            --dir /tmp/rel --clobber
+          SHA="$(cut -d' ' -f1 < /tmp/rel/weave-viewer-cli-macos-arm64.tar.gz.sha256)"
+          [ -n "$SHA" ] || { echo "ERROR: empty sha256 from release asset"; exit 1; }
+
+          F=Formula/weave-viewer.rb
+          sed -i -e "s/^  version \".*\"/  version \"$VERSION\"/" \
+                 -e "s/^  sha256 \".*\"/  sha256 \"$SHA\"/" \
+                 -e "/^  url /s#weave-v[^/]*/#weave-v$VERSION/#" "$F"
+          grep -q "version \"$VERSION\"" "$F" && grep -q "sha256 \"$SHA\"" "$F" \
+            && grep -q "weave-v$VERSION/" "$F" \
+            || { echo "ERROR: formula substitution did not apply"; exit 1; }
+
+          mkdir -p docs
+          cp /tmp/rel/feature-support.md docs/feature-support.md
+
+      - name: Commit if changed
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Formula/weave-viewer.rb docs/feature-support.md
+          if git diff --cached --quiet; then
+            echo "Formula + knowledge already current; nothing to commit."
+          else
+            git commit -m "formula: weave-viewer-cli ${{ github.event.release.tag_name || github.event.inputs.tag }}"
+            git push origin HEAD:${{ github.event.repository.default_branch }}
+          fi
