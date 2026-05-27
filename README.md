@@ -15,7 +15,7 @@ This repo is the public-facing distribution point for the `weave` family of tool
 
 ## What's in this repo
 
-- `Formula/weave.rb` — Homebrew formula that installs the `weave-viewer-cli` binary + its runtime data dir.
+- `Formula/weave-viewer.rb` — Homebrew formula that installs the `weave-viewer-cli` binary + its runtime data dir. **Owned by this repo**; `version`/`sha256` are bumped on each release by `.github/workflows/bump-formula.yml` (or `scripts/update-formula.sh`).
 - `examples/` — designer-facing curated `.weave` projects. Each subfolder is a self-contained project. `git clone` this repo, copy or edit examples, point `weave-viewer-cli` at the folder.
 - `docs/` — install, authoring guide, CSS subset reference, gotchas.
 - `.claude/skills/weave-scaffold/SKILL.md` — Claude Code skill that scaffolds a new `.weave` project from a user description.
@@ -24,17 +24,34 @@ This repo is the public-facing distribution point for the `weave` family of tool
 ## Install
 
 ```
-brew tap USER/weave
-brew install weave
+brew tap kolore-org/weave
+brew install kolore-org/weave/weave-viewer
 ```
 
-This puts `weave-viewer-cli` in your PATH and bundles the required Dawn/WebGPU runtime data.
+This puts `weave-viewer-cli` in your PATH and bundles the required Dawn/WebGPU runtime data
+(plus `ffmpeg`, pulled in automatically for `--record`).
+
+> **Use the qualified name `kolore-org/weave/weave-viewer`.** homebrew-core ships an unrelated
+> formula called `weave`, so a bare `brew install weave` installs the wrong tool. Once the tap is
+> added, `brew install weave-viewer` (unqualified) also resolves correctly.
+
+### Install from a local clone (testing the formula)
+
+Modern Homebrew rejects `brew install --formula ./path.rb`, so install through a throwaway tap that
+points at your clone:
+
+```
+git clone https://github.com/kolore-org/homebrew-weave
+brew tap kolore-org/weave-local ./homebrew-weave   # tap name is arbitrary; points at the clone
+brew install kolore-org/weave-local/weave-viewer
+# cleanup: brew uninstall weave-viewer && brew untap kolore-org/weave-local
+```
 
 ## First use
 
 ```
-git clone https://github.com/USER/weave
-cd weave/examples/basic
+git clone https://github.com/kolore-org/homebrew-weave
+cd homebrew-weave/examples/basic
 weave-viewer-cli .                        # opens preview window
 weave-viewer-cli . --record out.mp4       # renders to MP4
 ```
@@ -58,7 +75,12 @@ Video output is **silent** in v1 (audio dropped). Audio mixing is on the roadmap
 
 ## How releases work
 
-`Formula/weave.rb`'s URL points at a tarball hosted on this repo's GitHub Releases. The tarballs are produced by the upstream private monorepo's CI pipeline (GitHub Actions on tag push) and uploaded here automatically. Source code is **not** distributed via this repo.
+`Formula/weave-viewer.rb`'s URL points at a tarball hosted on this repo's GitHub Releases. The
+tarballs are produced by the upstream private monorepo's CI pipeline (GitHub Actions on tag push)
+and uploaded here as a `weave-v*` release (binary + `.sha256` + `feature-support.md`). The monorepo
+**does not** edit the formula — this repo owns it: `.github/workflows/bump-formula.yml` reacts to
+each published release and bumps `version`/`sha256` from the `.sha256` asset (and refreshes
+`docs/feature-support.md`). Source code is **not** distributed via this repo.
 
 ## Claude skill: weave-scaffold
 
