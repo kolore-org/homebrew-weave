@@ -24,9 +24,10 @@
       quickly; characters of a slow one ("überhaupt.", 10 chars in 1.039s)
       trickle in leisurely — matching the speaker's actual cadence.
 
-   To re-derive the body after subtitles.json changes: see the comment block
-   below the </style> tag for the generation snippet, OR regenerate from
-   examples/subtitles/subtitles.json with the same rule.
+   To re-derive the body after subtitles.json changes: regenerate the per-cue
+   and per-character spans from examples/subtitles/subtitles.json using the
+   two rules above (grouping into 6 cues by punctuation, then spreading
+   characters evenly across each word's [w_start, w_end] window).
 
    Layout notes:
    - white-space:nowrap on .cue keeps the line stable (no reflow as chars
