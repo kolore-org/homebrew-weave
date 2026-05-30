@@ -1,0 +1,86 @@
+<!DOCTYPE html><html><head><style>
+/* Karaoke-style cues: 6 cue containers (phrase-grouped), each holding word
+   spans. Per-word color transitions through three states driven by the speak
+   timing in subtitles.json:
+     upcoming (before timing[0])      → semi-transparent white  rgba(255,255,255,.4)
+     active   (timing[0]..timing[1])  → green                   #00D900
+     past     (after timing[1])       → black                   #000000
+
+   Mechanism: each .w has `animation-timing-function: step-end` over a single
+   from→to keyframe (green→black). step-end holds the "from" value for the
+   whole duration and snaps to "to" at the end; combined with
+   `animation-fill-mode: forwards` and the default (upcoming) colour set on .w,
+   you get a clean three-state machine with no interpolation:
+     • before animation-delay: initial colour applies (semi-transparent)
+     • during the animation:  step-end holds the "from" colour (green)
+     • after the animation:   forwards keeps the "to" colour (black)
+
+   Sidesteps the open engine bugs:
+     - no filter:drop-shadow → no glyph clip
+     - cue opacity uses the same step pattern as subtitles-cues (snap, no fade)
+*/
+@import url('https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&display=swap');
+html,body{margin:0;padding:0}
+body{width:576px;height:1024px;background:#000;position:relative;overflow:hidden;
+  font-family:'Cabin Sketch',cursive;text-align:center}
+video{position:absolute;inset:0;width:576px;height:1024px;object-fit:cover}
+.cue{position:absolute;left:24px;width:528px;top:66%;
+  font-size:54px;font-weight:700;line-height:1.15;
+  opacity:0;
+  animation-name:cueshow;
+  animation-timing-function:linear;
+  animation-fill-mode:forwards}
+@keyframes cueshow{
+  0%, 99.99% { opacity:1 }
+  100% { opacity:0 }
+}
+.w{color:rgba(255,255,255,.4);
+  animation-name:speak;
+  animation-timing-function:step-end;
+  animation-fill-mode:forwards}
+@keyframes speak{
+  from { color:#00D900 }
+  to   { color:#000000 }
+}
+</style></head><body>
+  <video src="dude.mp4" muted></video>
+
+  <div class="cue" style="animation-delay:0.240s;animation-duration:0.800s">
+    <span class="w" style="animation-delay:0.240s;animation-duration:0.340s">Ehrlich</span>
+    <span class="w" style="animation-delay:0.580s;animation-duration:0.460s">gesagt,</span>
+  </div>
+
+  <div class="cue" style="animation-delay:1.041s;animation-duration:2.559s">
+    <span class="w" style="animation-delay:1.041s;animation-duration:0.799s">Sonntagmorgen</span>
+    <span class="w" style="animation-delay:1.841s;animation-duration:0.186s">sind</span>
+    <span class="w" style="animation-delay:2.027s;animation-duration:0.180s">das</span>
+    <span class="w" style="animation-delay:2.207s;animation-duration:0.353s">Beste</span>
+    <span class="w" style="animation-delay:2.561s;animation-duration:1.039s">überhaupt.</span>
+  </div>
+
+  <div class="cue" style="animation-delay:3.601s;animation-duration:1.840s">
+    <span class="w" style="animation-delay:3.601s;animation-duration:0.440s">Kein</span>
+    <span class="w" style="animation-delay:4.041s;animation-duration:0.440s">Handy,</span>
+    <span class="w" style="animation-delay:4.481s;animation-duration:0.439s">keine</span>
+    <span class="w" style="animation-delay:4.921s;animation-duration:0.520s">Planen,</span>
+  </div>
+
+  <div class="cue" style="animation-delay:5.441s;animation-duration:1.780s">
+    <span class="w" style="animation-delay:5.441s;animation-duration:0.520s">einfach</span>
+    <span class="w" style="animation-delay:5.961s;animation-duration:0.519s">nur</span>
+    <span class="w" style="animation-delay:6.481s;animation-duration:0.740s">Ruhe,</span>
+  </div>
+
+  <div class="cue" style="animation-delay:7.221s;animation-duration:2.939s">
+    <span class="w" style="animation-delay:7.221s;animation-duration:0.739s">langsamer</span>
+    <span class="w" style="animation-delay:7.961s;animation-duration:0.733s">Kaffee,</span>
+    <span class="w" style="animation-delay:8.694s;animation-duration:0.733s">gutes</span>
+    <span class="w" style="animation-delay:9.427s;animation-duration:0.733s">Buch</span>
+  </div>
+
+  <div class="cue" style="animation-delay:10.880s;animation-duration:1.161s">
+    <span class="w" style="animation-delay:10.880s;animation-duration:0.387s">und</span>
+    <span class="w" style="animation-delay:11.267s;animation-duration:0.387s">los</span>
+    <span class="w" style="animation-delay:11.654s;animation-duration:0.387s">geht's.</span>
+  </div>
+</body></html>
