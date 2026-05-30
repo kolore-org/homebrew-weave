@@ -1,8 +1,8 @@
 <!DOCTYPE html><html><head><style>
 /* Subtitle template — cue-grouped words with SVG doodle accents on verbs.
 
-   Three verbs in this transcript get a per-word doodle that draws itself in
-   (via stroke-dashoffset animation) at the verb's timing[0]:
+   Three verbs in this transcript get a per-word SVG doodle that fades in at
+   the verb's timing[0]:
      gesagt   → pink squiggle underline (drawn under the word)
      sind     → yellow sparkle stars (above and right of the word)
      geht's   → cyan forward arrow (to the right of the word)
@@ -14,13 +14,21 @@
      doodle.animation-delay  = verb_word.timing[0]
    No magic numbers; everything traces back to subtitles.json.
 
-   Notes / known engine gaps the template works around:
-   - inter-span whitespace is dropped (filed), so word spans use
-     display:inline-block + margin for spacing.
+   SVG implementation notes (engine limits, filed upstream):
+   - CSS rules don't cascade to SVG <path> children — paths render with
+     fill:black/stroke:none if you don't set them inline. So every path
+     below has inline fill / stroke / stroke-width attributes.
+   - <img src=*.svg> is not recognised by the image loader either, so we
+     have to use inline <svg>.
+   - The fancier "draw-in" effect via stroke-dasharray + stroke-dashoffset
+     animation (filed as a stretch) didn't work either — instead each
+     doodle SVG fades in via opacity animation on the SVG element itself
+     (which CSS animation does honour).
+
+   Other known engine gaps the template works around:
+   - inter-span whitespace dropped → words use display:inline-block + margin
    - no filter:drop-shadow on words → partial-opacity glyph clip not
-     triggered (different bug, also filed).
-   - text-align:center on wrapped lines goes left-aligned (filed) — applies
-     to the long cue 2.
+     triggered
 */
 @import url('https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&display=swap');
 html,body{margin:0;padding:0}
@@ -39,40 +47,33 @@ video{position:absolute;inset:0;width:576px;height:1024px;object-fit:cover}
 
 .w{display:inline-block;margin:0 5px;vertical-align:baseline;position:relative}
 
-/* Doodle SVGs sit inside .verb spans, position:absolute relative to the word */
-.doodle{position:absolute;pointer-events:none;overflow:visible}
-.doodle path,
-.doodle line { fill:none;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;
-  stroke-dasharray:200;stroke-dashoffset:200;
-  animation-name:draw;animation-duration:0.35s;
-  animation-timing-function:cubic-bezier(.22,1,.36,1);  /* cubic-out */
-  animation-fill-mode:forwards }
-@keyframes draw{
-  to { stroke-dashoffset:0 }
+/* Doodle SVG containers — positioning relative to their verb's .w span.
+   Opacity 0→1 fadein at the verb's timing[0]. Set inline per doodle. */
+.doodle{position:absolute;pointer-events:none;overflow:visible;
+  opacity:0;
+  animation-name:doodlein;animation-duration:0.25s;
+  animation-timing-function:cubic-bezier(.22,1,.36,1);
+  animation-fill-mode:forwards}
+@keyframes doodlein{
+  to { opacity:1 }
 }
 
-/* Doodle variants */
 .dood-squiggle{left:0;right:0;bottom:-12px;height:16px;width:100%}
-.dood-squiggle path{stroke:#ff4d8d}
-
-.dood-stars{top:-22px;right:-22px;width:60px;height:38px}
-.dood-stars path{stroke:#FFD400}
-
-.dood-arrow{top:50%;right:-44px;width:36px;height:26px;transform:translateY(-50%)}
-.dood-arrow path{stroke:#00d9ff;stroke-width:4}
+.dood-stars   {top:-22px;right:-22px;width:60px;height:38px}
+.dood-arrow   {top:50%;right:-44px;width:36px;height:26px;transform:translateY(-50%)}
 </style></head><body>
   <video src="dude.mp4" muted></video>
 
   <!-- Cue 1: "Ehrlich gesagt,"  [0.240, 1.040] -->
   <div class="cue" style="animation-delay:0.240s;animation-duration:0.800s">
     <span class="w">Ehrlich</span>
-    <span class="w verb">gesagt,<svg class="doodle dood-squiggle" viewBox="0 0 100 16" preserveAspectRatio="none"><path d="M2 8 Q 14 1, 26 8 T 50 8 T 74 8 T 98 8" style="animation-delay:0.580s"/></svg></span>
+    <span class="w verb">gesagt,<svg class="doodle dood-squiggle" viewBox="0 0 100 16" preserveAspectRatio="none" style="animation-delay:0.580s"><path d="M2 8 Q 14 1, 26 8 T 50 8 T 74 8 T 98 8" fill="none" stroke="#ff4d8d" stroke-width="3.5" stroke-linecap="round"/></svg></span>
   </div>
 
   <!-- Cue 2: "Sonntagmorgen sind das Beste überhaupt."  [1.041, 3.600] -->
   <div class="cue" style="animation-delay:1.041s;animation-duration:2.559s">
     <span class="w">Sonntagmorgen</span>
-    <span class="w verb">sind<svg class="doodle dood-stars" viewBox="0 0 60 38"><path d="M14 6 L 14 18 M 8 12 L 20 12 M 11 8 L 17 16 M 11 16 L 17 8" style="animation-delay:1.841s"/><path d="M44 22 L 44 34 M 38 28 L 50 28 M 41 24 L 47 32 M 41 32 L 47 24" style="animation-delay:1.940s"/></svg></span>
+    <span class="w verb">sind<svg class="doodle dood-stars" viewBox="0 0 60 38" style="animation-delay:1.841s"><path d="M14 6 L 14 18 M 8 12 L 20 12 M 11 8 L 17 16 M 11 16 L 17 8" fill="none" stroke="#FFD400" stroke-width="3.5" stroke-linecap="round"/><path d="M44 22 L 44 34 M 38 28 L 50 28 M 41 24 L 47 32 M 41 32 L 47 24" fill="none" stroke="#FFD400" stroke-width="3.5" stroke-linecap="round"/></svg></span>
     <span class="w">das</span>
     <span class="w">Beste</span>
     <span class="w">überhaupt.</span>
@@ -105,6 +106,6 @@ video{position:absolute;inset:0;width:576px;height:1024px;object-fit:cover}
   <div class="cue" style="animation-delay:10.880s;animation-duration:1.161s">
     <span class="w">und</span>
     <span class="w">los</span>
-    <span class="w verb">geht&apos;s.<svg class="doodle dood-arrow" viewBox="0 0 36 26"><path d="M4 13 L 30 13 M 22 6 L 30 13 L 22 20" style="animation-delay:11.654s"/></svg></span>
+    <span class="w verb">geht&apos;s.<svg class="doodle dood-arrow" viewBox="0 0 36 26" style="animation-delay:11.654s"><path d="M4 13 L 30 13 M 22 6 L 30 13 L 22 20" fill="none" stroke="#00d9ff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
   </div>
 </body></html>
