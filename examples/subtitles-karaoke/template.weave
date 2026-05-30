@@ -24,7 +24,11 @@ html,body{margin:0;padding:0}
 body{width:576px;height:1024px;background:#000;position:relative;overflow:hidden;
   font-family:'Cabin Sketch',cursive;text-align:center}
 video{position:absolute;inset:0;width:576px;height:1024px;object-fit:cover}
-.cue{position:absolute;left:24px;width:528px;top:66%;
+/* Container sits in a 70% center safe zone (15% gutter each side).
+   Lines wrap when text exceeds the inner width.
+   NOTE: wrapped lines currently render left-aligned in weave instead of
+   centered — see docs/upstream-feedback/2026-05-30-text-align-center-wrapped-lines.md */
+.cue{position:absolute;left:15%;width:70%;top:66%;
   font-size:54px;font-weight:700;line-height:1.15;
   opacity:0;
   animation-name:cueshow;
