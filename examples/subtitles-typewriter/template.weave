@@ -1,23 +1,44 @@
 <!DOCTYPE html><html><head><style>
-/* Typewriter subtitle example — every character is its own <span>
-   with a staggered opacity animation. Reveals at constant 50ms intervals
-   (~20 chars/sec) starting from each cue's first-word timing[0].
+/* Typewriter subtitle template.
 
-   Layout choices:
-   - white-space:nowrap on the cue keeps the typed line stable (no reflow
-     as characters appear). Long cues will extend horizontally; the body's
-     overflow:hidden clips anything past 576px.
-   - Spaces between words are &nbsp; inside their own <span> (the literal
-     whitespace BETWEEN sibling spans would otherwise be dropped per the
-     filed inter-span-whitespace bug). NBSP also means lines never wrap,
-     which suits a fixed single-line typewriter.
-   - .cue handles overall show/hide (step opacity, no fade) like the other
-     examples.
-   - Per-char animation is `from opacity:0 to opacity:1` over 50ms — light
-     fade-in per character. Set `animation-duration:0.001s` and
-     `animation-timing-function:step-end` if a hard pop is preferred.
+   ALL animation timings are derived from subtitles.json — no magic numbers.
 
-   Cue character counts:  15 / 39 / 25 / 17 / 28 / 15  =  139 spans total.
+   Cues are grouped by the same punctuation boundaries as the other
+   subtitles-* examples (6 cues from the 21 word entries).
+
+   1) Per-cue timing
+      A cue groups the word entries between two natural punctuation breaks.
+        cue.animation-delay     = first_word.timing[0]
+        cue.animation-duration  = last_word.timing[1] - first_word.timing[0]
+      Cue visibility uses the standard step-opacity pattern (snap on at delay,
+      hold, snap off at end), no fade — same as the other -cues / -karaoke /
+      -advanced examples.
+
+   2) Per-character timing (INSIDE a cue)
+      Each word's characters are spread evenly across that word's speak
+      window:
+        for word with text of length n and timing [w_start, w_end]:
+          char i (0-based) reveals at  w_start + (i / n) * (w_end - w_start)
+      The space character BETWEEN words reveals at the next word's w_start.
+      So characters of a fast word ("sind", 4 chars in 0.186s) flash in
+      quickly; characters of a slow one ("überhaupt.", 10 chars in 1.039s)
+      trickle in leisurely — matching the speaker's actual cadence.
+
+   To re-derive the body after subtitles.json changes: see the comment block
+   below the </style> tag for the generation snippet, OR regenerate from
+   examples/subtitles/subtitles.json with the same rule.
+
+   Layout notes:
+   - white-space:nowrap on .cue keeps the line stable (no reflow as chars
+     appear — a wrapping reflow would push already-visible chars to new x
+     positions and look glitchy).
+   - Long cues overflow horizontally; body's overflow:hidden clips them.
+   - Inter-word spaces use <span>&nbsp;</span> so the open
+     inter-span-whitespace bug (docs/upstream-feedback/2026-05-30-inter-span-…)
+     doesn't drop them. NBSP also disables wrap at that point, which is fine
+     because we already have nowrap.
+   - No filter:drop-shadow → the partial-opacity glyph-clip bug doesn't
+     trigger.
 */
 @import url('https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&display=swap');
 html,body{margin:0;padding:0}
@@ -48,166 +69,168 @@ video{position:absolute;inset:0;width:576px;height:1024px;object-fit:cover}
 </style></head><body>
   <video src="dude.mp4" muted></video>
 
-  <!-- Cue 1: "Ehrlich gesagt,"  start=0.24s  (15 chars, types in 0.700s) -->
+  <!-- 139 char spans across 6 cues; timings derived from subtitles.json word windows -->
+
+  <!-- Cue 1: "Ehrlich gesagt,"  [0.240, 1.040] dur=0.800s -->
   <div class="cue" style="animation-delay:0.240s;animation-duration:0.800s">
     <span class="ch" style="animation-delay:0.240s">E</span>
-    <span class="ch" style="animation-delay:0.290s">h</span>
-    <span class="ch" style="animation-delay:0.340s">r</span>
-    <span class="ch" style="animation-delay:0.390s">l</span>
-    <span class="ch" style="animation-delay:0.440s">i</span>
-    <span class="ch" style="animation-delay:0.490s">c</span>
-    <span class="ch" style="animation-delay:0.540s">h</span>
-    <span class="ch" style="animation-delay:0.590s">&nbsp;</span>
-    <span class="ch" style="animation-delay:0.640s">g</span>
-    <span class="ch" style="animation-delay:0.690s">e</span>
-    <span class="ch" style="animation-delay:0.740s">s</span>
-    <span class="ch" style="animation-delay:0.790s">a</span>
-    <span class="ch" style="animation-delay:0.840s">g</span>
-    <span class="ch" style="animation-delay:0.890s">t</span>
-    <span class="ch" style="animation-delay:0.940s">,</span>
+    <span class="ch" style="animation-delay:0.289s">h</span>
+    <span class="ch" style="animation-delay:0.337s">r</span>
+    <span class="ch" style="animation-delay:0.386s">l</span>
+    <span class="ch" style="animation-delay:0.434s">i</span>
+    <span class="ch" style="animation-delay:0.483s">c</span>
+    <span class="ch" style="animation-delay:0.531s">h</span>
+    <span class="ch" style="animation-delay:0.580s">&nbsp;</span>
+    <span class="ch" style="animation-delay:0.580s">g</span>
+    <span class="ch" style="animation-delay:0.646s">e</span>
+    <span class="ch" style="animation-delay:0.711s">s</span>
+    <span class="ch" style="animation-delay:0.777s">a</span>
+    <span class="ch" style="animation-delay:0.843s">g</span>
+    <span class="ch" style="animation-delay:0.909s">t</span>
+    <span class="ch" style="animation-delay:0.974s">,</span>
   </div>
 
-  <!-- Cue 2: "Sonntagmorgen sind das Beste überhaupt."  start=1.041s  (39 chars, types in 1.900s) -->
+  <!-- Cue 2: "Sonntagmorgen sind das Beste überhaupt."  [1.041, 3.600] dur=2.559s -->
   <div class="cue" style="animation-delay:1.041s;animation-duration:2.559s">
     <span class="ch" style="animation-delay:1.041s">S</span>
-    <span class="ch" style="animation-delay:1.091s">o</span>
-    <span class="ch" style="animation-delay:1.141s">n</span>
-    <span class="ch" style="animation-delay:1.191s">n</span>
-    <span class="ch" style="animation-delay:1.241s">t</span>
-    <span class="ch" style="animation-delay:1.291s">a</span>
-    <span class="ch" style="animation-delay:1.341s">g</span>
-    <span class="ch" style="animation-delay:1.391s">m</span>
-    <span class="ch" style="animation-delay:1.441s">o</span>
-    <span class="ch" style="animation-delay:1.491s">r</span>
-    <span class="ch" style="animation-delay:1.541s">g</span>
-    <span class="ch" style="animation-delay:1.591s">e</span>
-    <span class="ch" style="animation-delay:1.641s">n</span>
-    <span class="ch" style="animation-delay:1.691s">&nbsp;</span>
-    <span class="ch" style="animation-delay:1.741s">s</span>
-    <span class="ch" style="animation-delay:1.791s">i</span>
-    <span class="ch" style="animation-delay:1.841s">n</span>
-    <span class="ch" style="animation-delay:1.891s">d</span>
-    <span class="ch" style="animation-delay:1.941s">&nbsp;</span>
-    <span class="ch" style="animation-delay:1.991s">d</span>
-    <span class="ch" style="animation-delay:2.041s">a</span>
-    <span class="ch" style="animation-delay:2.091s">s</span>
-    <span class="ch" style="animation-delay:2.141s">&nbsp;</span>
-    <span class="ch" style="animation-delay:2.191s">B</span>
-    <span class="ch" style="animation-delay:2.241s">e</span>
-    <span class="ch" style="animation-delay:2.291s">s</span>
-    <span class="ch" style="animation-delay:2.341s">t</span>
-    <span class="ch" style="animation-delay:2.391s">e</span>
-    <span class="ch" style="animation-delay:2.441s">&nbsp;</span>
-    <span class="ch" style="animation-delay:2.491s">ü</span>
-    <span class="ch" style="animation-delay:2.541s">b</span>
-    <span class="ch" style="animation-delay:2.591s">e</span>
-    <span class="ch" style="animation-delay:2.641s">r</span>
-    <span class="ch" style="animation-delay:2.691s">h</span>
-    <span class="ch" style="animation-delay:2.741s">a</span>
-    <span class="ch" style="animation-delay:2.791s">u</span>
-    <span class="ch" style="animation-delay:2.841s">p</span>
-    <span class="ch" style="animation-delay:2.891s">t</span>
-    <span class="ch" style="animation-delay:2.941s">.</span>
+    <span class="ch" style="animation-delay:1.102s">o</span>
+    <span class="ch" style="animation-delay:1.164s">n</span>
+    <span class="ch" style="animation-delay:1.225s">n</span>
+    <span class="ch" style="animation-delay:1.287s">t</span>
+    <span class="ch" style="animation-delay:1.348s">a</span>
+    <span class="ch" style="animation-delay:1.410s">g</span>
+    <span class="ch" style="animation-delay:1.471s">m</span>
+    <span class="ch" style="animation-delay:1.533s">o</span>
+    <span class="ch" style="animation-delay:1.594s">r</span>
+    <span class="ch" style="animation-delay:1.656s">g</span>
+    <span class="ch" style="animation-delay:1.717s">e</span>
+    <span class="ch" style="animation-delay:1.779s">n</span>
+    <span class="ch" style="animation-delay:1.841s">&nbsp;</span>
+    <span class="ch" style="animation-delay:1.841s">s</span>
+    <span class="ch" style="animation-delay:1.887s">i</span>
+    <span class="ch" style="animation-delay:1.934s">n</span>
+    <span class="ch" style="animation-delay:1.981s">d</span>
+    <span class="ch" style="animation-delay:2.027s">&nbsp;</span>
+    <span class="ch" style="animation-delay:2.027s">d</span>
+    <span class="ch" style="animation-delay:2.087s">a</span>
+    <span class="ch" style="animation-delay:2.147s">s</span>
+    <span class="ch" style="animation-delay:2.207s">&nbsp;</span>
+    <span class="ch" style="animation-delay:2.207s">B</span>
+    <span class="ch" style="animation-delay:2.278s">e</span>
+    <span class="ch" style="animation-delay:2.348s">s</span>
+    <span class="ch" style="animation-delay:2.419s">t</span>
+    <span class="ch" style="animation-delay:2.489s">e</span>
+    <span class="ch" style="animation-delay:2.561s">&nbsp;</span>
+    <span class="ch" style="animation-delay:2.561s">ü</span>
+    <span class="ch" style="animation-delay:2.665s">b</span>
+    <span class="ch" style="animation-delay:2.769s">e</span>
+    <span class="ch" style="animation-delay:2.873s">r</span>
+    <span class="ch" style="animation-delay:2.977s">h</span>
+    <span class="ch" style="animation-delay:3.080s">a</span>
+    <span class="ch" style="animation-delay:3.184s">u</span>
+    <span class="ch" style="animation-delay:3.288s">p</span>
+    <span class="ch" style="animation-delay:3.392s">t</span>
+    <span class="ch" style="animation-delay:3.496s">.</span>
   </div>
 
-  <!-- Cue 3: "Kein Handy, keine Planen,"  start=3.601s  (25 chars, types in 1.200s) -->
+  <!-- Cue 3: "Kein Handy, keine Planen,"  [3.601, 5.441] dur=1.840s -->
   <div class="cue" style="animation-delay:3.601s;animation-duration:1.840s">
     <span class="ch" style="animation-delay:3.601s">K</span>
-    <span class="ch" style="animation-delay:3.651s">e</span>
-    <span class="ch" style="animation-delay:3.701s">i</span>
-    <span class="ch" style="animation-delay:3.751s">n</span>
-    <span class="ch" style="animation-delay:3.801s">&nbsp;</span>
-    <span class="ch" style="animation-delay:3.851s">H</span>
-    <span class="ch" style="animation-delay:3.901s">a</span>
-    <span class="ch" style="animation-delay:3.951s">n</span>
-    <span class="ch" style="animation-delay:4.001s">d</span>
-    <span class="ch" style="animation-delay:4.051s">y</span>
-    <span class="ch" style="animation-delay:4.101s">,</span>
-    <span class="ch" style="animation-delay:4.151s">&nbsp;</span>
-    <span class="ch" style="animation-delay:4.201s">k</span>
-    <span class="ch" style="animation-delay:4.251s">e</span>
-    <span class="ch" style="animation-delay:4.301s">i</span>
-    <span class="ch" style="animation-delay:4.351s">n</span>
-    <span class="ch" style="animation-delay:4.401s">e</span>
-    <span class="ch" style="animation-delay:4.451s">&nbsp;</span>
-    <span class="ch" style="animation-delay:4.501s">P</span>
-    <span class="ch" style="animation-delay:4.551s">l</span>
-    <span class="ch" style="animation-delay:4.601s">a</span>
-    <span class="ch" style="animation-delay:4.651s">n</span>
-    <span class="ch" style="animation-delay:4.701s">e</span>
-    <span class="ch" style="animation-delay:4.751s">n</span>
-    <span class="ch" style="animation-delay:4.801s">,</span>
+    <span class="ch" style="animation-delay:3.711s">e</span>
+    <span class="ch" style="animation-delay:3.821s">i</span>
+    <span class="ch" style="animation-delay:3.931s">n</span>
+    <span class="ch" style="animation-delay:4.041s">&nbsp;</span>
+    <span class="ch" style="animation-delay:4.041s">H</span>
+    <span class="ch" style="animation-delay:4.114s">a</span>
+    <span class="ch" style="animation-delay:4.188s">n</span>
+    <span class="ch" style="animation-delay:4.261s">d</span>
+    <span class="ch" style="animation-delay:4.334s">y</span>
+    <span class="ch" style="animation-delay:4.408s">,</span>
+    <span class="ch" style="animation-delay:4.481s">&nbsp;</span>
+    <span class="ch" style="animation-delay:4.481s">k</span>
+    <span class="ch" style="animation-delay:4.569s">e</span>
+    <span class="ch" style="animation-delay:4.657s">i</span>
+    <span class="ch" style="animation-delay:4.744s">n</span>
+    <span class="ch" style="animation-delay:4.832s">e</span>
+    <span class="ch" style="animation-delay:4.921s">&nbsp;</span>
+    <span class="ch" style="animation-delay:4.921s">P</span>
+    <span class="ch" style="animation-delay:4.995s">l</span>
+    <span class="ch" style="animation-delay:5.070s">a</span>
+    <span class="ch" style="animation-delay:5.144s">n</span>
+    <span class="ch" style="animation-delay:5.218s">e</span>
+    <span class="ch" style="animation-delay:5.292s">n</span>
+    <span class="ch" style="animation-delay:5.367s">,</span>
   </div>
 
-  <!-- Cue 4: "einfach nur Ruhe,"  start=5.441s  (17 chars, types in 0.800s) -->
+  <!-- Cue 4: "einfach nur Ruhe,"  [5.441, 7.221] dur=1.780s -->
   <div class="cue" style="animation-delay:5.441s;animation-duration:1.780s">
     <span class="ch" style="animation-delay:5.441s">e</span>
-    <span class="ch" style="animation-delay:5.491s">i</span>
-    <span class="ch" style="animation-delay:5.541s">n</span>
-    <span class="ch" style="animation-delay:5.591s">f</span>
-    <span class="ch" style="animation-delay:5.641s">a</span>
-    <span class="ch" style="animation-delay:5.691s">c</span>
-    <span class="ch" style="animation-delay:5.741s">h</span>
-    <span class="ch" style="animation-delay:5.791s">&nbsp;</span>
-    <span class="ch" style="animation-delay:5.841s">n</span>
-    <span class="ch" style="animation-delay:5.891s">u</span>
-    <span class="ch" style="animation-delay:5.941s">r</span>
-    <span class="ch" style="animation-delay:5.991s">&nbsp;</span>
-    <span class="ch" style="animation-delay:6.041s">R</span>
-    <span class="ch" style="animation-delay:6.091s">u</span>
-    <span class="ch" style="animation-delay:6.141s">h</span>
-    <span class="ch" style="animation-delay:6.191s">e</span>
-    <span class="ch" style="animation-delay:6.241s">,</span>
+    <span class="ch" style="animation-delay:5.515s">i</span>
+    <span class="ch" style="animation-delay:5.590s">n</span>
+    <span class="ch" style="animation-delay:5.664s">f</span>
+    <span class="ch" style="animation-delay:5.738s">a</span>
+    <span class="ch" style="animation-delay:5.812s">c</span>
+    <span class="ch" style="animation-delay:5.887s">h</span>
+    <span class="ch" style="animation-delay:5.961s">&nbsp;</span>
+    <span class="ch" style="animation-delay:5.961s">n</span>
+    <span class="ch" style="animation-delay:6.134s">u</span>
+    <span class="ch" style="animation-delay:6.307s">r</span>
+    <span class="ch" style="animation-delay:6.481s">&nbsp;</span>
+    <span class="ch" style="animation-delay:6.481s">R</span>
+    <span class="ch" style="animation-delay:6.629s">u</span>
+    <span class="ch" style="animation-delay:6.777s">h</span>
+    <span class="ch" style="animation-delay:6.925s">e</span>
+    <span class="ch" style="animation-delay:7.073s">,</span>
   </div>
 
-  <!-- Cue 5: "langsamer Kaffee, gutes Buch"  start=7.221s  (28 chars, types in 1.350s) -->
+  <!-- Cue 5: "langsamer Kaffee, gutes Buch"  [7.221, 10.160] dur=2.939s -->
   <div class="cue" style="animation-delay:7.221s;animation-duration:2.939s">
     <span class="ch" style="animation-delay:7.221s">l</span>
-    <span class="ch" style="animation-delay:7.271s">a</span>
-    <span class="ch" style="animation-delay:7.321s">n</span>
-    <span class="ch" style="animation-delay:7.371s">g</span>
-    <span class="ch" style="animation-delay:7.421s">s</span>
-    <span class="ch" style="animation-delay:7.471s">a</span>
-    <span class="ch" style="animation-delay:7.521s">m</span>
-    <span class="ch" style="animation-delay:7.571s">e</span>
-    <span class="ch" style="animation-delay:7.621s">r</span>
-    <span class="ch" style="animation-delay:7.671s">&nbsp;</span>
-    <span class="ch" style="animation-delay:7.721s">K</span>
-    <span class="ch" style="animation-delay:7.771s">a</span>
-    <span class="ch" style="animation-delay:7.821s">f</span>
-    <span class="ch" style="animation-delay:7.871s">f</span>
-    <span class="ch" style="animation-delay:7.921s">e</span>
-    <span class="ch" style="animation-delay:7.971s">e</span>
-    <span class="ch" style="animation-delay:8.021s">,</span>
-    <span class="ch" style="animation-delay:8.071s">&nbsp;</span>
-    <span class="ch" style="animation-delay:8.121s">g</span>
-    <span class="ch" style="animation-delay:8.171s">u</span>
-    <span class="ch" style="animation-delay:8.221s">t</span>
-    <span class="ch" style="animation-delay:8.271s">e</span>
-    <span class="ch" style="animation-delay:8.321s">s</span>
-    <span class="ch" style="animation-delay:8.371s">&nbsp;</span>
-    <span class="ch" style="animation-delay:8.421s">B</span>
-    <span class="ch" style="animation-delay:8.471s">u</span>
-    <span class="ch" style="animation-delay:8.521s">c</span>
-    <span class="ch" style="animation-delay:8.571s">h</span>
+    <span class="ch" style="animation-delay:7.303s">a</span>
+    <span class="ch" style="animation-delay:7.385s">n</span>
+    <span class="ch" style="animation-delay:7.467s">g</span>
+    <span class="ch" style="animation-delay:7.549s">s</span>
+    <span class="ch" style="animation-delay:7.632s">a</span>
+    <span class="ch" style="animation-delay:7.714s">m</span>
+    <span class="ch" style="animation-delay:7.796s">e</span>
+    <span class="ch" style="animation-delay:7.878s">r</span>
+    <span class="ch" style="animation-delay:7.961s">&nbsp;</span>
+    <span class="ch" style="animation-delay:7.961s">K</span>
+    <span class="ch" style="animation-delay:8.066s">a</span>
+    <span class="ch" style="animation-delay:8.170s">f</span>
+    <span class="ch" style="animation-delay:8.275s">f</span>
+    <span class="ch" style="animation-delay:8.380s">e</span>
+    <span class="ch" style="animation-delay:8.485s">e</span>
+    <span class="ch" style="animation-delay:8.589s">,</span>
+    <span class="ch" style="animation-delay:8.694s">&nbsp;</span>
+    <span class="ch" style="animation-delay:8.694s">g</span>
+    <span class="ch" style="animation-delay:8.841s">u</span>
+    <span class="ch" style="animation-delay:8.987s">t</span>
+    <span class="ch" style="animation-delay:9.134s">e</span>
+    <span class="ch" style="animation-delay:9.280s">s</span>
+    <span class="ch" style="animation-delay:9.427s">&nbsp;</span>
+    <span class="ch" style="animation-delay:9.427s">B</span>
+    <span class="ch" style="animation-delay:9.610s">u</span>
+    <span class="ch" style="animation-delay:9.793s">c</span>
+    <span class="ch" style="animation-delay:9.977s">h</span>
   </div>
 
-  <!-- Cue 6: "und los geht's."  start=10.880s  (15 chars, types in 0.700s) -->
+  <!-- Cue 6: "und los geht's."  [10.880, 12.041] dur=1.161s -->
   <div class="cue" style="animation-delay:10.880s;animation-duration:1.161s">
     <span class="ch" style="animation-delay:10.880s">u</span>
-    <span class="ch" style="animation-delay:10.930s">n</span>
-    <span class="ch" style="animation-delay:10.980s">d</span>
-    <span class="ch" style="animation-delay:11.030s">&nbsp;</span>
-    <span class="ch" style="animation-delay:11.080s">l</span>
-    <span class="ch" style="animation-delay:11.130s">o</span>
-    <span class="ch" style="animation-delay:11.180s">s</span>
-    <span class="ch" style="animation-delay:11.230s">&nbsp;</span>
-    <span class="ch" style="animation-delay:11.280s">g</span>
-    <span class="ch" style="animation-delay:11.330s">e</span>
-    <span class="ch" style="animation-delay:11.380s">h</span>
-    <span class="ch" style="animation-delay:11.430s">t</span>
-    <span class="ch" style="animation-delay:11.480s">&apos;</span>
-    <span class="ch" style="animation-delay:11.530s">s</span>
-    <span class="ch" style="animation-delay:11.580s">.</span>
+    <span class="ch" style="animation-delay:11.009s">n</span>
+    <span class="ch" style="animation-delay:11.138s">d</span>
+    <span class="ch" style="animation-delay:11.267s">&nbsp;</span>
+    <span class="ch" style="animation-delay:11.267s">l</span>
+    <span class="ch" style="animation-delay:11.396s">o</span>
+    <span class="ch" style="animation-delay:11.525s">s</span>
+    <span class="ch" style="animation-delay:11.654s">&nbsp;</span>
+    <span class="ch" style="animation-delay:11.654s">g</span>
+    <span class="ch" style="animation-delay:11.709s">e</span>
+    <span class="ch" style="animation-delay:11.765s">h</span>
+    <span class="ch" style="animation-delay:11.820s">t</span>
+    <span class="ch" style="animation-delay:11.875s">&apos;</span>
+    <span class="ch" style="animation-delay:11.930s">s</span>
+    <span class="ch" style="animation-delay:11.986s">.</span>
   </div>
 </body></html>
