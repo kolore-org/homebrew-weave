@@ -14,7 +14,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&display=swap');
 html,body{margin:0;padding:0}
 body{width:576px;height:1024px;background:#000;position:relative;overflow:hidden;
-  font-family:'Cabin Sketch',cursive;color:#ff2a2a;text-align:center}
+  font-family:'Cabin Sketch',cursive;color:#FFD400;text-align:center}
 video{position:absolute;inset:0;width:576px;height:1024px;object-fit:cover}
 .c{position:absolute;left:24px;width:528px;top:66%;
   font-size:54px;font-weight:700;line-height:1.15;
