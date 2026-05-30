@@ -1,0 +1,44 @@
+<!DOCTYPE html><html><head><style>
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap');
+html,body{margin:0;padding:0}
+body{width:576px;height:1024px;background:#000;position:relative;overflow:hidden;
+  font-family:'Montserrat',sans-serif;text-transform:uppercase}
+video{position:absolute;inset:0;width:576px;height:1024px;object-fit:cover}
+.w{position:absolute;left:24px;width:528px;top:46%;text-align:center;line-height:1.05;
+  opacity:0;filter:drop-shadow(0 4px 10px rgba(0,0,0,.9));
+  animation-name:wordPop;animation-timing-function:ease-out;animation-fill-mode:both}
+.t-filler{font-size:44px;font-weight:700;color:#fff}
+.t-mid{font-size:60px;font-weight:800;color:#fff}
+.t-key{font-size:80px;font-weight:900}
+.c0{color:#FFD400}.c1{color:#00E0FF}.c2{color:#FF4D8D}
+@keyframes wordPop{
+  0%{opacity:0;transform:translateY(18px) scale(.7)}
+  18%{opacity:1;transform:translateY(0) scale(1.12)}
+  30%{transform:scale(1)}
+  82%{opacity:1;transform:scale(1)}
+  100%{opacity:0;transform:scale(.92)}
+}
+</style></head><body>
+  <video src="dude.mp4" muted></video>
+  <div class="w t-mid"      style="animation-delay:0.240s;animation-duration:0.340s">Ehrlich</div>
+  <div class="w t-mid"      style="animation-delay:0.580s;animation-duration:0.460s">gesagt,</div>
+  <div class="w t-key c0"   style="animation-delay:1.041s;animation-duration:0.799s">Sonntagmorgen</div>
+  <div class="w t-filler"   style="animation-delay:1.841s;animation-duration:0.186s">sind</div>
+  <div class="w t-filler"   style="animation-delay:2.027s;animation-duration:0.180s">das</div>
+  <div class="w t-key c1"   style="animation-delay:2.207s;animation-duration:0.353s">Beste</div>
+  <div class="w t-key c2"   style="animation-delay:2.561s;animation-duration:1.039s">überhaupt.</div>
+  <div class="w t-mid"      style="animation-delay:3.601s;animation-duration:0.440s">Kein</div>
+  <div class="w t-key c0"   style="animation-delay:4.041s;animation-duration:0.440s">Handy,</div>
+  <div class="w t-filler"   style="animation-delay:4.481s;animation-duration:0.439s">keine</div>
+  <div class="w t-mid"      style="animation-delay:4.921s;animation-duration:0.520s">Planen,</div>
+  <div class="w t-mid"      style="animation-delay:5.441s;animation-duration:0.520s">einfach</div>
+  <div class="w t-filler"   style="animation-delay:5.961s;animation-duration:0.519s">nur</div>
+  <div class="w t-key c1"   style="animation-delay:6.481s;animation-duration:0.740s">Ruhe,</div>
+  <div class="w t-mid"      style="animation-delay:7.221s;animation-duration:0.739s">langsamer</div>
+  <div class="w t-key c2"   style="animation-delay:7.961s;animation-duration:0.733s">Kaffee,</div>
+  <div class="w t-mid"      style="animation-delay:8.694s;animation-duration:0.733s">gutes</div>
+  <div class="w t-key c0"   style="animation-delay:9.427s;animation-duration:0.733s">Buch</div>
+  <div class="w t-filler"   style="animation-delay:10.880s;animation-duration:0.387s">und</div>
+  <div class="w t-mid"      style="animation-delay:11.267s;animation-duration:0.387s">los</div>
+  <div class="w t-mid"      style="animation-delay:11.654s;animation-duration:0.387s">geht's.</div>
+</body></html>
