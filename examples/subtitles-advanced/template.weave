@@ -1,0 +1,118 @@
+<!DOCTYPE html><html><head><style>
+/* Advanced subtitle example — same cue structure as subtitles-karaoke, but:
+   - words are sized by their `rank` in subtitles.json (1-3 small / 4-6 mid / 7-9 large)
+   - each word gets its own entry animation (pop / slide-l / slide-r / slide-up / drop / fade)
+   - entry animations use eased timing functions (back-out, cubic-out, springy)
+
+   Notes:
+   - opacity is animated on each word, but no `filter:drop-shadow` is used,
+     so the partial-opacity glyph-clip bug doesn't trigger.
+   - per-word .w spans are display:inline-block with margin-right for spacing
+     (the open inter-span-whitespace bug would otherwise drop word gaps).
+   - rank colours are deliberately distinct so size + colour together flag
+     each word's tier at a glance.
+*/
+@import url('https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&display=swap');
+html,body{margin:0;padding:0}
+body{width:576px;height:1024px;background:#000;position:relative;overflow:hidden;
+  font-family:'Cabin Sketch',cursive;text-align:center}
+video{position:absolute;inset:0;width:576px;height:1024px;object-fit:cover}
+
+.cue{position:absolute;left:15%;width:70%;top:56%;
+  line-height:1.15;
+  opacity:0;
+  animation-name:cueshow;animation-timing-function:linear;animation-fill-mode:forwards}
+@keyframes cueshow{
+  0%, 99.99% { opacity:1 }
+  100% { opacity:0 }
+}
+
+.w{display:inline-block;margin:0 6px;vertical-align:middle;
+  opacity:0;
+  animation-duration:0.45s;animation-fill-mode:forwards}
+
+/* Rank tiers: size + colour together */
+.r-sm{font-size:32px;color:#f5d97e}   /* rank 1-3: small dim yellow */
+.r-md{font-size:48px;color:#ffffff}   /* rank 4-6: medium white */
+.r-lg{font-size:72px;color:#00d9ff;font-weight:700}  /* rank 7-9: large cyan, bold */
+
+/* Entry animations */
+.a-pop     { animation-name:pop;     animation-timing-function:cubic-bezier(.34,1.56,.64,1) } /* back-out */
+.a-fade    { animation-name:fade;    animation-timing-function:ease-out }
+.a-slide-l { animation-name:slideL;  animation-timing-function:cubic-bezier(.22,1,.36,1) }   /* cubic-out */
+.a-slide-r { animation-name:slideR;  animation-timing-function:cubic-bezier(.22,1,.36,1) }
+.a-slide-up{ animation-name:slideUp; animation-timing-function:cubic-bezier(.22,1,.36,1) }
+.a-drop    { animation-name:drop;    animation-timing-function:cubic-bezier(.5,1.5,.5,1) }   /* bouncy */
+
+@keyframes pop {
+  0%   { opacity:0; transform:scale(.4) }
+  100% { opacity:1; transform:scale(1) }
+}
+@keyframes fade {
+  0%   { opacity:0 }
+  100% { opacity:1 }
+}
+@keyframes slideL {
+  0%   { opacity:0; transform:translateX(-80px) }
+  100% { opacity:1; transform:translateX(0) }
+}
+@keyframes slideR {
+  0%   { opacity:0; transform:translateX(80px) }
+  100% { opacity:1; transform:translateX(0) }
+}
+@keyframes slideUp {
+  0%   { opacity:0; transform:translateY(40px) }
+  100% { opacity:1; transform:translateY(0) }
+}
+@keyframes drop {
+  0%   { opacity:0; transform:translateY(-40px) }
+  100% { opacity:1; transform:translateY(0) }
+}
+</style></head><body>
+  <video src="dude.mp4" muted></video>
+
+  <!-- Cue 1: "Ehrlich gesagt," -->
+  <div class="cue" style="animation-delay:0.240s;animation-duration:0.800s">
+    <span class="w r-md a-slide-l" style="animation-delay:0.240s">Ehrlich</span>
+    <span class="w r-md a-slide-r" style="animation-delay:0.580s">gesagt,</span>
+  </div>
+
+  <!-- Cue 2: "Sonntagmorgen sind das Beste überhaupt." -->
+  <div class="cue" style="animation-delay:1.041s;animation-duration:2.559s">
+    <span class="w r-lg a-pop"      style="animation-delay:1.041s">Sonntagmorgen</span>
+    <span class="w r-sm a-fade"     style="animation-delay:1.841s">sind</span>
+    <span class="w r-sm a-fade"     style="animation-delay:2.027s">das</span>
+    <span class="w r-lg a-drop"     style="animation-delay:2.207s">Beste</span>
+    <span class="w r-lg a-slide-up" style="animation-delay:2.561s">überhaupt.</span>
+  </div>
+
+  <!-- Cue 3: "Kein Handy, keine Planen," -->
+  <div class="cue" style="animation-delay:3.601s;animation-duration:1.840s">
+    <span class="w r-md a-pop"     style="animation-delay:3.601s">Kein</span>
+    <span class="w r-lg a-slide-l" style="animation-delay:4.041s">Handy,</span>
+    <span class="w r-sm a-fade"    style="animation-delay:4.481s">keine</span>
+    <span class="w r-md a-slide-r" style="animation-delay:4.921s">Planen,</span>
+  </div>
+
+  <!-- Cue 4: "einfach nur Ruhe," -->
+  <div class="cue" style="animation-delay:5.441s;animation-duration:1.780s">
+    <span class="w r-md a-slide-up" style="animation-delay:5.441s">einfach</span>
+    <span class="w r-sm a-fade"     style="animation-delay:5.961s">nur</span>
+    <span class="w r-lg a-drop"     style="animation-delay:6.481s">Ruhe,</span>
+  </div>
+
+  <!-- Cue 5: "langsamer Kaffee, gutes Buch" -->
+  <div class="cue" style="animation-delay:7.221s;animation-duration:2.939s">
+    <span class="w r-md a-slide-l" style="animation-delay:7.221s">langsamer</span>
+    <span class="w r-lg a-slide-r" style="animation-delay:7.961s">Kaffee,</span>
+    <span class="w r-md a-pop"     style="animation-delay:8.694s">gutes</span>
+    <span class="w r-lg a-drop"    style="animation-delay:9.427s">Buch</span>
+  </div>
+
+  <!-- Cue 6: "und los geht's." -->
+  <div class="cue" style="animation-delay:10.880s;animation-duration:1.161s">
+    <span class="w r-sm a-fade"     style="animation-delay:10.880s">und</span>
+    <span class="w r-md a-pop"      style="animation-delay:11.267s">los</span>
+    <span class="w r-md a-slide-up" style="animation-delay:11.654s">geht's.</span>
+  </div>
+</body></html>

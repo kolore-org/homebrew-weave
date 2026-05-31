@@ -1,7 +1,12 @@
 # Local-only exploration / investigation artifacts — kept out of the repo.
+# (`*.mp4` is intentionally NOT here — tracked video assets land in LFS via
+# .gitattributes. Local renders stay out via the .weave-cli/, exploration/,
+# and outputs/ directory ignores.)
 .weave-cli/
 exploration/
-*.mp4
+outputs/
+.superpowers/
+.DS_Store
 
 # Local planning docs (not part of the distribution surface).
 2026-05-27-weave-knowledge-satellite.md

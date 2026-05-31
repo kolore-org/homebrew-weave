@@ -1,0 +1,49 @@
+<!DOCTYPE html><html><head><style>
+/* Sidesteps two pending engine bugs (see docs/upstream-feedback/2026-05-30-*):
+   - NO filter:drop-shadow → avoids the partial-opacity glyph clip
+   - NO opacity interpolation → opacity steps 0→1 at start, 1→0 at end, no fade
+   Each word is visible for exactly its subtitles.json timing window.
+*/
+@import url('https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&display=swap');
+html,body{margin:0;padding:0}
+body{width:576px;height:1024px;background:#000;position:relative;overflow:hidden;
+  font-family:'Cabin Sketch',cursive;color:#fff;text-align:center}
+video{position:absolute;inset:0;width:576px;height:1024px;object-fit:cover}
+.w{position:absolute;left:24px;width:528px;top:74%;
+  font-size:64px;font-weight:700;line-height:1.2;
+  opacity:0;
+  animation-name:show;
+  animation-timing-function:linear;
+  animation-fill-mode:forwards}
+/* `show` is a single 1-cycle keyframe that stays at opacity:1 for the whole
+   animation duration and snaps to 0 at the very last frame. With per-word
+   animation-delay and animation-duration matching timing[0] and (timing[1]-timing[0]),
+   each word pops in at start, holds, and pops out at end — no fade. */
+@keyframes show{
+  0%, 99.99% { opacity:1 }
+  100% { opacity:0 }
+}
+</style></head><body>
+  <video src="dude.mp4" muted></video>
+  <div class="w" style="animation-delay:0.240s;animation-duration:0.340s">Ehrlich</div>
+  <div class="w" style="animation-delay:0.580s;animation-duration:0.460s">gesagt,</div>
+  <div class="w" style="animation-delay:1.041s;animation-duration:0.799s">Sonntagmorgen</div>
+  <div class="w" style="animation-delay:1.841s;animation-duration:0.186s">sind</div>
+  <div class="w" style="animation-delay:2.027s;animation-duration:0.180s">das</div>
+  <div class="w" style="animation-delay:2.207s;animation-duration:0.353s">Beste</div>
+  <div class="w" style="animation-delay:2.561s;animation-duration:1.039s">überhaupt.</div>
+  <div class="w" style="animation-delay:3.601s;animation-duration:0.440s">Kein</div>
+  <div class="w" style="animation-delay:4.041s;animation-duration:0.440s">Handy,</div>
+  <div class="w" style="animation-delay:4.481s;animation-duration:0.439s">keine</div>
+  <div class="w" style="animation-delay:4.921s;animation-duration:0.520s">Planen,</div>
+  <div class="w" style="animation-delay:5.441s;animation-duration:0.520s">einfach</div>
+  <div class="w" style="animation-delay:5.961s;animation-duration:0.519s">nur</div>
+  <div class="w" style="animation-delay:6.481s;animation-duration:0.740s">Ruhe,</div>
+  <div class="w" style="animation-delay:7.221s;animation-duration:0.739s">langsamer</div>
+  <div class="w" style="animation-delay:7.961s;animation-duration:0.733s">Kaffee,</div>
+  <div class="w" style="animation-delay:8.694s;animation-duration:0.733s">gutes</div>
+  <div class="w" style="animation-delay:9.427s;animation-duration:0.733s">Buch</div>
+  <div class="w" style="animation-delay:10.880s;animation-duration:0.387s">und</div>
+  <div class="w" style="animation-delay:11.267s;animation-duration:0.387s">los</div>
+  <div class="w" style="animation-delay:11.654s;animation-duration:0.387s">geht's.</div>
+</body></html>
