@@ -18,22 +18,31 @@ This repo is the public-facing distribution point for the `weave` family of tool
 - `Formula/weave-viewer.rb` — Homebrew formula that installs the `weave-viewer-cli` binary + its runtime data dir. **Owned by this repo**; `version`/`sha256` are bumped on each release by `.github/workflows/bump-formula.yml` (or `scripts/update-formula.sh`).
 - `examples/` — designer-facing curated `.weave` projects. Each subfolder is a self-contained project. `git clone` this repo, copy or edit examples, point `weave-viewer-cli` at the folder.
 - `docs/` — install, authoring guide, CSS subset reference, gotchas.
+- `.claude/skills/weave-subtitle/SKILL.md` — Claude Code skill that assists in creating, styling, and recording subtitles, and automatically manages the rendering pipeline.
 - `.claude/skills/weave-scaffold/SKILL.md` — Claude Code skill that scaffolds a new `.weave` project from a user description.
 - `.github/workflows/test-formula.yml` — CI that installs the formula in a clean environment and renders `examples/basic` to verify the release works.
 
-## Install
+## Install (macOS Only)
 
-```
+Weave is currently experimental and supports **macOS (Apple Silicon / M-series ARM64)** only.
+
+To install the CLI and all of its required runtime dependencies, run the following Homebrew commands:
+
+```bash
+# 1. Tap the official Weave repository
 brew tap kolore-org/weave
+
+# 2. Install the weave-viewer package (use the qualified name to avoid collisions)
 brew install kolore-org/weave/weave-viewer
 ```
 
-This puts `weave-viewer-cli` in your PATH and bundles the required Dawn/WebGPU runtime data
-(plus `ffmpeg`, pulled in automatically for `--record`).
+### Dependency Resolution
+- **`weave-viewer-cli`**: This command is added directly to your system PATH.
+- **`ffmpeg`**: Homebrew will **automatically detect and install `ffmpeg`** as a dependency if it's not already installed. `ffmpeg` is strictly required for encoding and saving recorded MP4 videos (`--record`).
+- **Dawn/WebGPU Shaders**: All WebGPU runtime shaders and required dylibs are automatically bundled and placed in the formula's Cellar prefix.
 
-> **Use the qualified name `kolore-org/weave/weave-viewer`.** homebrew-core ships an unrelated
-> formula called `weave`, so a bare `brew install weave` installs the wrong tool. Once the tap is
-> added, `brew install weave-viewer` (unqualified) also resolves correctly.
+> [!IMPORTANT]
+> **Avoid naming collisions:** Do NOT run `brew install weave`. Homebrew's default core contains an unrelated Git merge-driver called `weave` which will conflict. Always use the qualified name `kolore-org/weave/weave-viewer` or `kolore-org/weave/weave` to install the correct package.
 
 ### Install from a local clone (testing the formula)
 
@@ -82,15 +91,27 @@ and uploaded here as a `weave-v*` release (binary + `.sha256` + `feature-support
 each published release and bumps `version`/`sha256` from the `.sha256` asset (and refreshes
 `docs/feature-support.md`). Source code is **not** distributed via this repo.
 
-## Claude skill: weave-scaffold
+## Claude Skills
 
-If you use Claude Code, this repo ships a skill that helps you start a new `.weave` project from a description. After cloning:
+If you use **Claude Code**, this repository ships specialized **Agent Skills** located in `.claude/skills/` to automate your video creation and motion-design workflow:
 
+### 1. Subtitle & Recording Skill (`/weave-subtitle`)
+Designed specifically for kinetic motion graphics and subtitle design. To trigger the skill:
+```bash
+/weave-subtitle
 ```
+This skill helps you:
+- Suggest interactive browser-based subtitle styling workflows (using the Claude `frontend-design` plugin or Chrome DevTools).
+- Map transcripts into contiguous word-by-word or phrase-based subtitle components in `template.weave`.
+- Proactively avoid engine rendering limitations (e.g. text clipping, layout spacing gaps).
+- Execute the rendering and audio-re-muxing pipelines using `weave-viewer-cli` and `ffmpeg` to produce a finalized video.
+
+### 2. Scaffolding Skill (`/weave-scaffold`)
+Helps you bootstrap new projects from a high-level description:
+```bash
 /weave-scaffold
 ```
-
-Claude asks about your goal (intro? lower-third? square card?), font, color palette, dimensions, and writes `template.weave` + `overrides.json` + `manifest.json` in your working directory. The skill is scaffolding-only — it does not run renders or modify existing projects.
+Claude asks about your creative goal (intro, lower-third, greeting card), dimensions, and writes starting templates (`template.weave`, `overrides.json`, `manifest.json`) in your working directory.
 
 ## Examples
 

@@ -8,5 +8,4 @@ outputs/
 .superpowers/
 .DS_Store
 
-# Local planning docs (not part of the distribution surface).
-2026-05-27-weave-knowledge-satellite.md
+*.mp4
