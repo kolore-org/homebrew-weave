@@ -1,0 +1,37 @@
+<!DOCTYPE html><html><head><style>
+/* Cue-based subtitle template — 6 phrase-grouped cues, one shown at a time.
+   Same step-opacity trick as subtitles-simple to keep clear of the
+   filter/opacity engine bug. Red Cabin Sketch.
+
+   Cues grouped along natural punctuation boundaries:
+     1. "Ehrlich gesagt,"                    0.240 .. 1.040  (2 words)
+     2. "Sonntagmorgen sind das Beste überhaupt."  1.041 .. 3.600  (5 words)
+     3. "Kein Handy, keine Planen,"          3.601 .. 5.441  (4 words)
+     4. "einfach nur Ruhe,"                  5.441 .. 7.221  (3 words)
+     5. "langsamer Kaffee, gutes Buch"       7.221 .. 10.160 (4 words)
+     6. "und los geht's."                    10.880 .. 12.041 (3 words)
+*/
+@import url('https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&display=swap');
+html,body{margin:0;padding:0}
+body{width:576px;height:1024px;background:#000;position:relative;overflow:hidden;
+  font-family:'Cabin Sketch',cursive;color:#FFD400;text-align:center}
+video{position:absolute;inset:0;width:576px;height:1024px;object-fit:cover}
+.c{position:absolute;left:24px;width:528px;top:66%;
+  font-size:54px;font-weight:700;line-height:1.15;
+  opacity:0;
+  animation-name:show;
+  animation-timing-function:linear;
+  animation-fill-mode:forwards}
+@keyframes show{
+  0%, 99.99% { opacity:1 }
+  100% { opacity:0 }
+}
+</style></head><body>
+  <video src="dude.mp4" muted></video>
+  <div class="c" style="animation-delay:0.240s;animation-duration:0.800s">Ehrlich gesagt,</div>
+  <div class="c" style="animation-delay:1.041s;animation-duration:2.559s">Sonntagmorgen sind das Beste überhaupt.</div>
+  <div class="c" style="animation-delay:3.601s;animation-duration:1.840s">Kein Handy, keine Planen,</div>
+  <div class="c" style="animation-delay:5.441s;animation-duration:1.780s">einfach nur Ruhe,</div>
+  <div class="c" style="animation-delay:7.221s;animation-duration:2.939s">langsamer Kaffee, gutes Buch</div>
+  <div class="c" style="animation-delay:10.880s;animation-duration:1.161s">und los geht's.</div>
+</body></html>

@@ -1,0 +1,23 @@
+[
+  { "text": "Ehrlich", "rank": 5, "timing": [0.24, 0.58] },
+  { "text": "gesagt,", "rank": 4, "timing": [0.58, 1.04] },
+  { "text": "Sonntagmorgen", "rank": 9, "timing": [1.041, 1.84] },
+  { "text": "sind", "rank": 2, "timing": [1.841, 2.027] },
+  { "text": "das", "rank": 1, "timing": [2.027, 2.207] },
+  { "text": "Beste", "rank": 8, "timing": [2.207, 2.56] },
+  { "text": "überhaupt.", "rank": 7, "timing": [2.561, 3.6] },
+  { "text": "Kein", "rank": 6, "timing": [3.601, 4.041] },
+  { "text": "Handy,", "rank": 7, "timing": [4.041, 4.481] },
+  { "text": "keine", "rank": 3, "timing": [4.481, 4.92] },
+  { "text": "Planen,", "rank": 5, "timing": [4.921, 5.441] },
+  { "text": "einfach", "rank": 5, "timing": [5.441, 5.961] },
+  { "text": "nur", "rank": 2, "timing": [5.961, 6.48] },
+  { "text": "Ruhe,", "rank": 8, "timing": [6.481, 7.221] },
+  { "text": "langsamer", "rank": 6, "timing": [7.221, 7.96] },
+  { "text": "Kaffee,", "rank": 8, "timing": [7.961, 8.694] },
+  { "text": "gutes", "rank": 4, "timing": [8.694, 9.427] },
+  { "text": "Buch", "rank": 7, "timing": [9.427, 10.16] },
+  { "text": "und", "rank": 1, "timing": [10.88, 11.267] },
+  { "text": "los", "rank": 5, "timing": [11.267, 11.654] },
+  { "text": "geht's.", "rank": 6, "timing": [11.654, 12.041] }
+]

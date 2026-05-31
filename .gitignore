@@ -1,4 +1,11 @@
 # Local-only exploration / investigation artifacts — kept out of the repo.
+# (`*.mp4` is intentionally NOT here — tracked video assets land in LFS via
+# .gitattributes. Local renders stay out via the .weave-cli/, exploration/,
+# and outputs/ directory ignores.)
 .weave-cli/
 exploration/
+outputs/
+.superpowers/
+.DS_Store
+
 *.mp4
