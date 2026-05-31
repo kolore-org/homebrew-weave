@@ -129,5 +129,6 @@ Verbatim weave log for the external-svg case:
 | `text-align:center` not applied to wrapped lines | ✅ fixed |
 | inter-span whitespace dropped | ❌ pending |
 | **SVG support gaps (this report)** | **❌ pending** |
+| Font-cache race silently falls back to embedded font | ❌ pending |
 
 _Re-verified against locally-built `../hexer` binary on 2026-05-31._

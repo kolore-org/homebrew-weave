@@ -108,3 +108,4 @@ word/cue div, not nested spans.
 | `text-align:center` not applied to wrapped lines | ✅ fixed |
 | **inter-span whitespace dropped (this report)** | **❌ pending** |
 | SVG support gaps | ❌ pending |
+| Font-cache race silently falls back to embedded font | ❌ pending |
