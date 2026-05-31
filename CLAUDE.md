@@ -25,6 +25,7 @@ the `examples/` and the `weave-scaffold` skill referenced below are still planne
 - **Do not invent specifications:** The `.weave` format, `id="template-*-N"` matchers, supported CSS subset, and `overrides.json` schema are defined upstream. Pull exact rules from the upstream monorepo or ask for them.
 - **Do not fabricate release targets:** `Formula/weave-viewer.rb` is owned by this repo and its `version`/`url`/`sha256` must strictly track an existing `weave-v*` release. Don't hand-edit them — `.github/workflows/bump-formula.yml` (on `release: published`) or `scripts/update-formula.sh` sync them from the release's `.sha256` asset.
 - **Scaffold limitation:** `.claude/skills/weave-scaffold/SKILL.md` is for generating new projects only. Do not use it to edit existing projects or trigger renders.
+- **Output folder policy:** Generated artifacts — `--record` MP4s, `--exit-screenshot` PNGs, extracted frames, ffmpeg intermediates, logs, anything the engine or a tool produces — go in `outputs/` (gitignored) or `/tmp/`. Never alongside source fixtures, in `assets/`, or in `examples/`. `outputs/` is for artifacts worth keeping across runs (frames you want to diff, renders you want to inspect); `/tmp/` is for one-shots. Source fixtures (templates, manifests, source media) stay in their fixture folder; renders from them land under `outputs/<fixture-name>/` mirroring the path.
 
 ## Licensing Rules
 
