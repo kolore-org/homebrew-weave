@@ -47,14 +47,11 @@ error: Failure while executing; `git clone ...` exited with 128.
 
 **Why this happens:** On Apple Silicon, Homebrew is installed under `/opt/homebrew`. When executing a tap clone, Homebrew sanitizes the environment `PATH` for isolation and security, stripping `/opt/homebrew/bin` (where `git-lfs` resides). Because this repository uses Git LFS to track and store examples/assets, the git checkout triggers your global Git LFS filter. Since the sanitized PATH doesn't include `/opt/homebrew/bin`, the checkout fails with `git-lfs: command not found`.
 
-**The Workaround:** Bypassing your global Git config (including LFS filters) during the tap is highly recommended. You can do this elegantly by setting `HOME=/dev/null` during the command execution:
+**The Workaround:** Bypassing your global Git config (including LFS filters) during the tap is highly recommended. You can do this elegantly by pointing `HOME` to a temporary isolated directory during execution. This prevents the tap clone from loading your global `~/.gitconfig` where LFS filters are declared, while maintaining a writable home directory for Homebrew's internal bootsnap caches:
+
 ```bash
-# Run tap with clean HOME to bypass global LFS filters
-HOME=/dev/null brew tap kolore-org/weave
-```
-Or for local testing:
-```bash
-HOME=/dev/null brew tap kolore-org/weave-local ./homebrew-weave
+# Tap with an isolated temporary HOME to bypass global Git LFS filters safely
+TMP_HOME=$(mktemp -d) && HOME="$TMP_HOME" brew tap kolore-org/weave && rm -rf "$TMP_HOME"
 ```
 
 ### Dependency Resolution
@@ -67,14 +64,18 @@ HOME=/dev/null brew tap kolore-org/weave-local ./homebrew-weave
 
 ### Install from a local clone (testing the formula)
 
-Modern Homebrew rejects `brew install --formula ./path.rb`, so install through a throwaway tap that
-points at your clone:
+Modern Homebrew rejects `brew install --formula ./path.rb`. Instead, tap your local clone directory directly under the official namespace `kolore-org/weave` using an isolated temporary HOME:
 
-```
+```bash
 git clone https://github.com/kolore-org/homebrew-weave
-HOME=/dev/null brew tap kolore-org/weave-local ./homebrew-weave   # tap name is arbitrary; points at the clone
-brew install kolore-org/weave-local/weave-viewer
-# cleanup: brew uninstall weave-viewer && brew untap kolore-org/weave-local
+# Tap your local clone using an isolated temporary HOME to bypass LFS checkout errors
+TMP_HOME=$(mktemp -d) && HOME="$TMP_HOME" brew tap kolore-org/weave ./homebrew-weave && rm -rf "$TMP_HOME"
+
+# Install using the standard qualified name
+brew install kolore-org/weave/weave-viewer
+
+# Cleanup when done:
+brew uninstall weave-viewer && brew untap kolore-org/weave
 ```
 
 ## First use
