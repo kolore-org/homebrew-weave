@@ -36,6 +36,27 @@ brew tap kolore-org/weave
 brew install kolore-org/weave/weave-viewer
 ```
 
+### Known Apple Silicon & Git LFS Sandbox Caveat
+
+If you are on an M-series Mac and have **Git LFS** globally configured on your system, the `brew tap` command may fail with an error similar to:
+```
+git-lfs filter-process: git-lfs: command not found
+fatal: the remote end hung up unexpectedly
+error: Failure while executing; `git clone ...` exited with 128.
+```
+
+**Why this happens:** On Apple Silicon, Homebrew is installed under `/opt/homebrew`. When executing a tap clone, Homebrew sanitizes the environment `PATH` for isolation and security, stripping `/opt/homebrew/bin` (where `git-lfs` resides). Because this repository uses Git LFS to track and store examples/assets, the git checkout triggers your global Git LFS filter. Since the sanitized PATH doesn't include `/opt/homebrew/bin`, the checkout fails with `git-lfs: command not found`.
+
+**The Workaround:** Bypassing your global Git config (including LFS filters) during the tap is highly recommended. You can do this elegantly by setting `HOME=/dev/null` during the command execution:
+```bash
+# Run tap with clean HOME to bypass global LFS filters
+HOME=/dev/null brew tap kolore-org/weave
+```
+Or for local testing:
+```bash
+HOME=/dev/null brew tap kolore-org/weave-local ./homebrew-weave
+```
+
 ### Dependency Resolution
 - **`weave-viewer-cli`**: This command is added directly to your system PATH.
 - **`ffmpeg`**: Homebrew will **automatically detect and install `ffmpeg`** as a dependency if it's not already installed. `ffmpeg` is strictly required for encoding and saving recorded MP4 videos (`--record`).
@@ -51,7 +72,7 @@ points at your clone:
 
 ```
 git clone https://github.com/kolore-org/homebrew-weave
-brew tap kolore-org/weave-local ./homebrew-weave   # tap name is arbitrary; points at the clone
+HOME=/dev/null brew tap kolore-org/weave-local ./homebrew-weave   # tap name is arbitrary; points at the clone
 brew install kolore-org/weave-local/weave-viewer
 # cleanup: brew uninstall weave-viewer && brew untap kolore-org/weave-local
 ```
