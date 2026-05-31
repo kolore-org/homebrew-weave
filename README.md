@@ -103,6 +103,36 @@ A project is a **folder**. Inside, `weave-viewer-cli` looks for:
 
 Video output is **silent** in v1 (audio dropped). Audio mixing is on the roadmap.
 
+## Automated Transcription & Alignment Tool
+
+This repository includes a powerful local utility script, `scripts/transcribe_to_weave.py`, to help users and agents automatically transcribe any video file and generate a fully-compliant `.weave` project with precise, word-level synchronized Karaoke-Highlight subtitle animations.
+
+### Prerequisites
+
+The script runs locally and requires **OpenAI Whisper** and `ffmpeg` (installed by the Homebrew formula):
+
+```bash
+pip install openai-whisper
+```
+
+### Usage
+
+Run the script pointing to your video file. It will automatically probe your video's dimensions/duration and generate the styled `template.weave` and `manifest.json`:
+
+```bash
+python3 scripts/transcribe_to_weave.py path/to/your/video.mp4 [output_dir]
+```
+
+By default, the output project is created at `outputs/<video_name>/`. Once generated, you can immediately render it:
+
+```bash
+# 1. Render visual tracks to silent MP4
+weave-viewer-cli outputs/video_name --record outputs/video_name/silent.mp4
+
+# 2. Re-mux the original audio instantly
+ffmpeg -y -i outputs/video_name/silent.mp4 -i path/to/your/video.mp4 -map 0:v -map 1:a -c:v copy -c:a copy -shortest outputs/video_name/final_subtitled.mp4
+```
+
 ## How releases work
 
 `Formula/weave-viewer.rb`'s URL points at a tarball hosted on this repo's GitHub Releases. The
