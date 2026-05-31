@@ -30,6 +30,7 @@ video{position:absolute;inset:0;width:576px;height:1024px;object-fit:cover}
    centered — see docs/upstream-feedback/2026-05-30-text-align-center-wrapped-lines.md */
 .cue{position:absolute;left:15%;width:70%;top:66%;
   font-size:54px;font-weight:700;line-height:1.15;
+  display:flex;flex-wrap:wrap;justify-content:center;row-gap:12px;column-gap:16px;
   opacity:0;
   animation-name:cueshow;
   animation-timing-function:linear;
