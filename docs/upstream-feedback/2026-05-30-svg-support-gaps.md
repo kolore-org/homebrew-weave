@@ -123,9 +123,11 @@ Verbatim weave log for the external-svg case:
 | Issue | Status |
 |---|---|
 | `<video>` panic / path / IOSurface | ✅ fixed v0.1.4/v0.1.5 |
-| Default-font SIGABRT | ✅ fixed on branch |
-| `filter:drop-shadow` + animated opacity → glyph clip | ❌ pending |
-| `font-weight > 400` not applied | ❌ pending |
-| `text-align:center` not applied to wrapped lines | ❌ pending |
+| Default-font SIGABRT | ✅ fixed |
+| `filter:drop-shadow` + animated opacity → glyph clip | ✅ fixed (hexer commit `f0c49749`) |
+| `font-weight > 400` not applied | ✅ fixed |
+| `text-align:center` not applied to wrapped lines | ✅ fixed |
 | inter-span whitespace dropped | ❌ pending |
 | **SVG support gaps (this report)** | **❌ pending** |
+
+_Re-verified against locally-built `../hexer` binary on 2026-05-31._

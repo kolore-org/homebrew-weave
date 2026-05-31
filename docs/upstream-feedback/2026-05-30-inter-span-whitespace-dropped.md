@@ -97,13 +97,14 @@ word/cue div, not nested spans.
    once whitespace is preserved, the wrapped lines from box-2 will also need
    per-line centering to land correctly.
 
-## Status table (engine-side issues this session)
+## Status table (engine-side issues, re-verified 2026-05-31)
 
 | Issue | Status |
 |---|---|
 | `<video>` panic / path / IOSurface | ✅ fixed v0.1.4/v0.1.5 |
-| Default-font SIGABRT | ✅ fixed on branch |
-| `filter:drop-shadow` + animated opacity → glyph clip | ❌ pending |
-| `font-weight > 400` not applied | ❌ pending |
-| `text-align:center` not applied to wrapped lines | ❌ pending |
+| Default-font SIGABRT | ✅ fixed |
+| `filter:drop-shadow` + animated opacity → glyph clip | ✅ fixed (hexer commit `f0c49749`) |
+| `font-weight > 400` not applied | ✅ fixed |
+| `text-align:center` not applied to wrapped lines | ✅ fixed |
 | **inter-span whitespace dropped (this report)** | **❌ pending** |
+| SVG support gaps | ❌ pending |
