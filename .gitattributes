@@ -5,7 +5,6 @@
 # Reminder: a path also has to be NOT covered by .gitignore for these patterns
 # to take effect — e.g. exploration/ and .weave-cli/ are gitignored and any
 # media in them stays local.
-
 *.mp4  filter=lfs diff=lfs merge=lfs -text
 *.mov  filter=lfs diff=lfs merge=lfs -text
 *.webm filter=lfs diff=lfs merge=lfs -text
