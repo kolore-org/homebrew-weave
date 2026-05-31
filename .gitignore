@@ -5,6 +5,7 @@
 .weave-cli/
 exploration/
 outputs/
+scripts/__pycache__/
 .superpowers/
 .DS_Store
 

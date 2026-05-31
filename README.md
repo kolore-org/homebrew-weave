@@ -105,7 +105,7 @@ Video output is **silent** in v1 (audio dropped). Audio mixing is on the roadmap
 
 ## Automated Transcription & Alignment Tool
 
-This repository includes a powerful local utility script, `scripts/transcribe_to_weave.py`, to help users and agents automatically transcribe any video file and generate a fully-compliant `.weave` project with precise, word-level synchronized Karaoke-Highlight subtitle animations.
+This repository includes a powerful local utility script, `scripts/transcribe_to_weave.py`, to help users and agents automatically transcribe any video or audio file and extract a clean list of words with precise timestamps.
 
 ### Prerequisites
 
@@ -117,21 +117,20 @@ pip install openai-whisper
 
 ### Usage
 
-Run the script pointing to your video file. It will automatically probe your video's dimensions/duration and generate the styled `template.weave` and `manifest.json`:
+Run the script pointing to your video or audio file. It will extract a clean list of words with precise start/end timestamps and output it to a JSON file:
 
 ```bash
-python3 scripts/transcribe_to_weave.py path/to/your/video.mp4 [output_dir]
+python3 scripts/transcribe_to_weave.py path/to/your/video.mp4 [output_transcript.json]
 ```
 
-By default, the output project is created at `outputs/<video_name>/`. Once generated, you can immediately render it:
+By default, the transcript is saved to `path/to/your/video_transcript.json`.
+
+Alternatively, you can bypass Whisper entirely by providing a pre-existing subtitle file (`.srt` or `.vtt`) to extract word timings with even distribution:
 
 ```bash
-# 1. Render visual tracks to silent MP4
-weave-viewer-cli outputs/video_name --record outputs/video_name/silent.mp4
-
-# 2. Re-mux the original audio instantly
-ffmpeg -y -i outputs/video_name/silent.mp4 -i path/to/your/video.mp4 -map 0:v -map 1:a -c:v copy -c:a copy -shortest outputs/video_name/final_subtitled.mp4
+python3 scripts/transcribe_to_weave.py path/to/your/video.mp4 --srt path/to/your/subtitles.srt
 ```
+
 
 ## How releases work
 

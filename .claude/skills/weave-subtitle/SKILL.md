@@ -57,27 +57,28 @@ The agent must follow this exact step-by-step decision protocol:
 Acknowledge the missing transcript and present the user with a clear set of options, providing a useful first choice while leaving the fallback choice to the user:
 
 1. **Option 1 (Recommended 1st Choice)**: Auto-transcribe using local **OpenAI Whisper**.
-   - *What it does*: Automatically extracts audio via `ffmpeg`, transcribes it locally with word-level timestamps, and scaffolds a perfectly synced `.weave` subtitle project.
+   - *What it does*: Automatically extracts audio via `ffmpeg`, transcribes it locally with word-level timestamps, and outputs a clean JSON transcript.
    - *Transparency Warning*: Inform the user that this requires installing the `openai-whisper` Python package and downloading PyTorch and the Whisper base model (~250MB+ download combined).
    - *Explicit Ask*: Ask: *"Would you like me to install Whisper and run the local transcription script? Please reply with YES to proceed."*
 2. **Option 2 (Fallback - Pre-existing Subtitles)**: Provide an existing subtitle file.
-   - The user can supply an `.srt` or `.vtt` file. The script [transcribe_to_weave.py](file:///Users/jakubtyrcha/repos/homebrew-weave/scripts/transcribe_to_weave.py) will parse it and distribute word timings evenly without needing Whisper installed.
+   - The user can supply an `.srt` or `.vtt` file. The script [transcribe_to_weave.py](file:///Users/jakubtyrcha/repos/homebrew-weave/scripts/transcribe_to_weave.py) will parse it and distribute word timings evenly without needing Whisper installed, producing a structured transcript JSON.
 3. **Option 3 (Fallback - Raw Text)**: Provide a raw text transcript.
    - The user can supply the plain text, and the agent will help them scaffold manual timing cues.
 
 ### Step 2: Wait for Explicit User Consent
 Stop execution and wait for the user's response. 
 
-- **If the user replies YES (Opt-In)**: The Whisper dependency is no longer optional. Proceed to set up the environment and run the automated script:
+- **If the user replies YES (Opt-In)**: The Whisper dependency is no longer optional. Proceed to set up the environment, run the automated script, and use the generated transcript JSON to scaffold the `.weave` subtitle project:
   ```bash
   pip install openai-whisper
-  python3 scripts/transcribe_to_weave.py <path_to_video> [output_dir]
+  python3 scripts/transcribe_to_weave.py <path_to_video> [output_transcript.json]
   ```
 - **If the user chooses Option 2**: Run the script bypassing Whisper entirely by targeting their subtitle file:
   ```bash
-  python3 scripts/transcribe_to_weave.py <path_to_video> [output_dir] --srt <path_to_srt>
+  python3 scripts/transcribe_to_weave.py <path_to_video> [output_transcript.json] --srt <path_to_srt>
   ```
 - **If the user chooses Option 3 or another approach**: Respect their fallback choice and proceed with manual or interactive design.
+
 
 ---
 
