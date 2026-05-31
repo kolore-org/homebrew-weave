@@ -38,6 +38,7 @@ video{position:absolute;inset:0;width:576px;height:1024px;object-fit:cover}
 
 .cue{position:absolute;left:15%;width:70%;top:60%;
   font-size:42px;font-weight:700;line-height:1.3;
+  display:flex;flex-wrap:wrap;justify-content:center;row-gap:12px;column-gap:16px;
   opacity:0;
   animation-name:cueshow;animation-timing-function:linear;animation-fill-mode:forwards}
 @keyframes cueshow{
