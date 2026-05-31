@@ -47,28 +47,37 @@ Instruct the designer to follow this workflow to build subtitles:
 
 ---
 
-## 🎙️ 3. Transcribing Video-Only Inputs (Soft Suggestions)
+## 🎙️ 3. Transcribing Video-Only Inputs (Agent Protocol & User Opt-In)
 
-If a user provides a video-only input with no subtitle timing data, the agent should softly suggest transcription workflows to generate a compliant word-level `subtitles.json` file.
+If a user provides a video-only input with no subtitle timing data, **DO NOT automatically install python dependencies or download models.** OpenAI Whisper is an optional dependency and must remain strictly opt-in.
 
-### Option A: Whisper MCP Server (Automated)
-If you have an MCP server like **`whisper-mcp`** or a similar audio-to-text Model Context Protocol server configured, use it to directly transcribe the video. This retrieves word-level timestamps directly into your conversation context.
+The agent must follow this exact step-by-step decision protocol:
 
-### Option B: Local ffmpeg + Whisper Workflow
-Alternatively, guide the user or perform the following manual steps:
-1. **Extract Audio**: Extract a lightweight MP3 file from the video:
-   ```bash
-   ffmpeg -i input.mp4 -vn -acodec libmp3lame -q:a 2 output.mp3
-   ```
-2. **Transcribe**: Run the MP3 through a local OpenAI Whisper CLI or an API-based script to get word-level timestamps.
-3. **Format JSON**: Construct a Weave-compliant `subtitles.json` array containing `{ text, rank, timing:[start, end] }`:
-   ```json
-   [
-     { "text": "Ehrlich", "rank": 4, "timing": [0.24, 0.58] },
-     { "text": "gesagt,", "rank": 4, "timing": [0.58, 1.04] }
-   ]
-   ```
-   *Note: `rank` is an integer from 1 (lowest) to 9 (highest) representing emphasis.*
+### Step 1: Propose Whisper & Present Options
+Acknowledge the missing transcript and present the user with a clear set of options, providing a useful first choice while leaving the fallback choice to the user:
+
+1. **Option 1 (Recommended 1st Choice)**: Auto-transcribe using local **OpenAI Whisper**.
+   - *What it does*: Automatically extracts audio via `ffmpeg`, transcribes it locally with word-level timestamps, and scaffolds a perfectly synced `.weave` subtitle project.
+   - *Transparency Warning*: Inform the user that this requires installing the `openai-whisper` Python package and downloading PyTorch and the Whisper base model (~250MB+ download combined).
+   - *Explicit Ask*: Ask: *"Would you like me to install Whisper and run the local transcription script? Please reply with YES to proceed."*
+2. **Option 2 (Fallback - Pre-existing Subtitles)**: Provide an existing subtitle file.
+   - The user can supply an `.srt` or `.vtt` file. The script [transcribe_to_weave.py](file:///Users/jakubtyrcha/repos/homebrew-weave/scripts/transcribe_to_weave.py) will parse it and distribute word timings evenly without needing Whisper installed.
+3. **Option 3 (Fallback - Raw Text)**: Provide a raw text transcript.
+   - The user can supply the plain text, and the agent will help them scaffold manual timing cues.
+
+### Step 2: Wait for Explicit User Consent
+Stop execution and wait for the user's response. 
+
+- **If the user replies YES (Opt-In)**: The Whisper dependency is no longer optional. Proceed to set up the environment and run the automated script:
+  ```bash
+  pip install openai-whisper
+  python3 scripts/transcribe_to_weave.py <path_to_video> [output_dir]
+  ```
+- **If the user chooses Option 2**: Run the script bypassing Whisper entirely by targeting their subtitle file:
+  ```bash
+  python3 scripts/transcribe_to_weave.py <path_to_video> [output_dir] --srt <path_to_srt>
+  ```
+- **If the user chooses Option 3 or another approach**: Respect their fallback choice and proceed with manual or interactive design.
 
 ---
 
