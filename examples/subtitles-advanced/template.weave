@@ -70,7 +70,7 @@ video{position:absolute;inset:0;width:576px;height:1024px;object-fit:cover}
   100% { opacity:1; transform:translateY(0) }
 }
 </style></head><body>
-  <video src="dude.mp4" muted></video>
+  <video src="../../assets/videos/dude.mp4" muted></video>
 
   <!-- Cue 1: "Ehrlich gesagt," -->
   <div class="cue" style="animation-delay:0.240s;animation-duration:0.800s">

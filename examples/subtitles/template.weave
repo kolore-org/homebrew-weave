@@ -19,7 +19,7 @@ video{position:absolute;inset:0;width:576px;height:1024px;object-fit:cover}
   100%{opacity:0;transform:scale(.92)}
 }
 </style></head><body>
-  <video src="dude.mp4" muted></video>
+  <video src="../../assets/videos/dude.mp4" muted></video>
   <div class="w t-mid"      style="animation-delay:0.240s;animation-duration:0.340s">Ehrlich</div>
   <div class="w t-mid"      style="animation-delay:0.580s;animation-duration:0.460s">gesagt,</div>
   <div class="w t-key c0"   style="animation-delay:1.041s;animation-duration:0.799s">Sonntagmorgen</div>
