@@ -68,7 +68,7 @@ video{position:absolute;inset:0;width:576px;height:1024px;object-fit:cover}
   to   { opacity:1 }
 }
 </style></head><body>
-  <video src="dude.mp4" muted></video>
+  <video src="../../assets/videos/dude.mp4" muted></video>
 
   <!-- 139 char spans across 6 cues; timings derived from subtitles.json word windows -->
 

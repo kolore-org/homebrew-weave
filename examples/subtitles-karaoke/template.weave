@@ -48,7 +48,7 @@ video{position:absolute;inset:0;width:576px;height:1024px;object-fit:cover}
   to   { color:#000000 }
 }
 </style></head><body>
-  <video src="dude.mp4" muted></video>
+  <video src="../../assets/videos/dude.mp4" muted></video>
 
   <div class="cue" style="animation-delay:0.240s;animation-duration:0.800s">
     <span class="w" style="animation-delay:0.240s;animation-duration:0.340s">Ehrlich</span>

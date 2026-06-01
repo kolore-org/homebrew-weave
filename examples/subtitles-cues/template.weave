@@ -27,7 +27,7 @@ video{position:absolute;inset:0;width:576px;height:1024px;object-fit:cover}
   100% { opacity:0 }
 }
 </style></head><body>
-  <video src="dude.mp4" muted></video>
+  <video src="../../assets/videos/dude.mp4" muted></video>
   <div class="c" style="animation-delay:0.240s;animation-duration:0.800s">Ehrlich gesagt,</div>
   <div class="c" style="animation-delay:1.041s;animation-duration:2.559s">Sonntagmorgen sind das Beste überhaupt.</div>
   <div class="c" style="animation-delay:3.601s;animation-duration:1.840s">Kein Handy, keine Planen,</div>

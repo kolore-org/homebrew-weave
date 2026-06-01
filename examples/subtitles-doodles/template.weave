@@ -63,7 +63,7 @@ video{position:absolute;inset:0;width:576px;height:1024px;object-fit:cover}
 .dood-stars   {top:-22px;right:-22px;width:60px;height:38px}
 .dood-arrow   {top:50%;right:-44px;width:36px;height:26px;transform:translateY(-50%)}
 </style></head><body>
-  <video src="dude.mp4" muted></video>
+  <video src="../../assets/videos/dude.mp4" muted></video>
 
   <!-- Cue 1: "Ehrlich gesagt,"  [0.240, 1.040] -->
   <div class="cue" style="animation-delay:0.240s;animation-duration:0.800s">
