@@ -15,13 +15,17 @@ class WeaveViewer < Formula
   # Version is hardcoded in the URL (not #{version}): Homebrew style requires
   # `url` before `version`, so interpolation would resolve empty. The bump
   # workflow/script rewrite the `weave-v<ver>` path segment in lockstep.
-  url "https://github.com/kolore-org/homebrew-weave/releases/download/weave-v0.1.7/weave-viewer-cli-macos-arm64.tar.gz"
-  version "0.1.7"
-  sha256 "a7a5ad5867f03def039bea744d83f0134f9539b42e50e57ba444e7efdff2a68c"
+  url "https://github.com/kolore-org/homebrew-weave/releases/download/weave-v0.1.8/weave-viewer-cli-macos-arm64.tar.gz"
+  version "0.1.8"
+  sha256 "effaebbd1562d3efbe4ac7f87969cf73188ac9629c52ce23c343d8846d3df897"
   license :cannot_represent # closed binary; examples/docs licensed separately
 
   depends_on arch: :arm64 # v1 is Apple Silicon only
   depends_on "ffmpeg" # required by `--record` (MP4 output)
+  # Bundled lib/libuhdr.1.dylib links against Homebrew's libjpeg.8.dylib by
+  # absolute path; without this, every invocation (even --validate) dies with
+  # `dyld: Library not loaded: .../jpeg-turbo/lib/libjpeg.8.dylib`.
+  depends_on "jpeg-turbo"
   depends_on :macos
 
   def install
