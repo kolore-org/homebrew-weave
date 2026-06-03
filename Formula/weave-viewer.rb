@@ -22,6 +22,10 @@ class WeaveViewer < Formula
 
   depends_on arch: :arm64 # v1 is Apple Silicon only
   depends_on "ffmpeg" # required by `--record` (MP4 output)
+  # Bundled lib/libuhdr.1.dylib links against Homebrew's libjpeg.8.dylib by
+  # absolute path; without this, every invocation (even --validate) dies with
+  # `dyld: Library not loaded: .../jpeg-turbo/lib/libjpeg.8.dylib`.
+  depends_on "jpeg-turbo"
   depends_on :macos
 
   def install
