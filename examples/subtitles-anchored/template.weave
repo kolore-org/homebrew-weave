@@ -1,0 +1,94 @@
+<!DOCTYPE html><html><head><style>
+/* subtitles-anchored: captions ride the TOP of the speaker's outline.
+
+   This is the alternative to subtitles-depth. Instead of stacking an alpha
+   cut-out to make captions read as printed behind the speaker, it uses the
+   Weave path-from-alpha feature (see docs/weave-extensions.md):
+
+     1. The alpha .mov publishes a path traced from its alpha silhouette
+        (path-name:--outline; path-source:alpha). One producer, two consumers:
+     2. An SVG <path d="--outline"> strokes that silhouette as a dashed line.
+     3. Each caption <span text-path="--outline" text-path-side:top> rides the
+        TOP arc of the silhouette, offset slightly outward.
+
+   Layers (back -> front):
+     z0  ../../assets/videos/clean-footage.mp4             base plate
+     z1  ../../assets/videos/clean-footage-with-alpha.mov  keyed subject + path producer
+     z2  <svg><path d="--outline">                         dashed outline
+     z3  .cue captions                                     text along the outline top
+
+   Timings come from subtitles.json (whisper word windows), grouped into <=2-word
+   cues on punctuation boundaries — identical windows to subtitles-depth. Each cue
+   is a SINGLE text-path span (the whole cue on the curve) shown only in its
+   window via the cueshow opacity keyframe; only one cue is visible at a time.
+
+   Engine-bug avoidance (same as subtitles-depth):
+   - No filter:drop-shadow (partial-opacity glyph-clip bug).
+*/
+@import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+html,body{margin:0;padding:0}
+body{width:576px;height:1024px;background:#000;position:relative;overflow:hidden}
+.vid{position:absolute;inset:0;width:576px;height:1024px;object-fit:cover}
+
+/* The keyed subject is also the path producer: its alpha silhouette is traced
+   and published under --outline for the SVG stroke and the captions to consume. */
+#subj{z-index:1;path-name:--outline;path-source:alpha;path-image-threshold:0.5}
+
+svg{position:absolute;inset:0;z-index:2}
+
+.cue{
+  font-family:'Anton',sans-serif;text-transform:uppercase;
+  font-size:48px;font-weight:400;letter-spacing:-1px;color:#fff;
+  text-path:--outline;text-path-side:top;text-path-offset:12px;
+  z-index:3;
+  opacity:0;animation-name:cueshow;animation-timing-function:linear;
+  animation-fill-mode:forwards}
+@keyframes cueshow{
+  0%, 99.99% { opacity:1 }
+  100% { opacity:0 }
+}
+</style></head><body>
+  <video class="vid" style="z-index:0" src="../../assets/videos/clean-footage.mp4" muted></video>
+  <video id="subj" class="vid" src="../../assets/videos/clean-footage-with-alpha.mov" muted></video>
+
+  <svg viewBox="0 0 576 1024" width="576" height="1024">
+    <path d="--outline" stroke="#99ff99" stroke-width="2" stroke-dasharray="6 4" fill="none"/>
+  </svg>
+
+  <!-- Cue 1: "100,000 followers"  [0.000, 1.700] -->
+  <span class="cue" style="animation-delay:0.000s;animation-duration:1.700s">100,000 followers</span>
+  <!-- Cue 2: "from one"  [1.700, 2.400] -->
+  <span class="cue" style="animation-delay:1.700s;animation-duration:0.700s">from one</span>
+  <!-- Cue 3: "video called"  [2.400, 3.260] -->
+  <span class="cue" style="animation-delay:2.400s;animation-duration:0.860s">video called</span>
+  <!-- Cue 4: "a compilation"  [3.260, 4.460] -->
+  <span class="cue" style="animation-delay:3.260s;animation-duration:1.200s">a compilation</span>
+  <!-- Cue 5: "video."  [4.460, 5.220] -->
+  <span class="cue" style="animation-delay:4.460s;animation-duration:0.760s">video.</span>
+  <!-- Cue 6: "Take your"  [5.540, 5.840] -->
+  <span class="cue" style="animation-delay:5.540s;animation-duration:0.300s">Take your</span>
+  <!-- Cue 7: "best flips."  [5.840, 6.580] -->
+  <span class="cue" style="animation-delay:5.840s;animation-duration:0.740s">best flips.</span>
+  <!-- Cue 8: "Edit them"  [7.180, 7.740] -->
+  <span class="cue" style="animation-delay:7.180s;animation-duration:0.560s">Edit them</span>
+  <!-- Cue 9: "into one"  [7.740, 8.560] -->
+  <span class="cue" style="animation-delay:7.740s;animation-duration:0.820s">into one</span>
+  <!-- Cue 10: "super cut."  [8.560, 9.460] -->
+  <span class="cue" style="animation-delay:8.560s;animation-duration:0.900s">super cut.</span>
+  <!-- Cue 11: "Show them"  [9.960, 10.260] -->
+  <span class="cue" style="animation-delay:9.960s;animation-duration:0.300s">Show them</span>
+  <!-- Cue 12: "everything you"  [10.260, 11.100] -->
+  <span class="cue" style="animation-delay:10.260s;animation-duration:0.840s">everything you</span>
+  <!-- Cue 13: "do."  [11.100, 11.280] -->
+  <span class="cue" style="animation-delay:11.100s;animation-duration:0.180s">do.</span>
+  <!-- Cue 14: "That's how"  [11.540, 12.020] -->
+  <span class="cue" style="animation-delay:11.540s;animation-duration:0.480s">That&apos;s how</span>
+  <!-- Cue 15: "they remember"  [12.020, 12.800] -->
+  <span class="cue" style="animation-delay:12.020s;animation-duration:0.780s">they remember</span>
+  <!-- Cue 16: "you."  [12.800, 13.140] -->
+  <span class="cue" style="animation-delay:12.800s;animation-duration:0.340s">you.</span>
+  <!-- Cue 17: "Link in"  [14.120, 14.880] -->
+  <span class="cue" style="animation-delay:14.120s;animation-duration:0.760s">Link in</span>
+  <!-- Cue 18: "bio."  [14.880, 15.260] -->
+  <span class="cue" style="animation-delay:14.880s;animation-duration:0.380s">bio.</span>
+</body></html>
