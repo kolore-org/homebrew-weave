@@ -8,5 +8,3 @@ outputs/
 scripts/__pycache__/
 .superpowers/
 .DS_Store
-
-*.mp4

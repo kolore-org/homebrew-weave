@@ -1,0 +1,141 @@
+<!DOCTYPE html><html><head><style>
+/* subtitles-depth: captions sit BEHIND the speaker (depth via z-index).
+
+   Three stacked full-canvas layers (back -> front):
+     z0  ../../assets/videos/clean-footage.mp4             base plate
+     z1  .cue captions  (pinned near the top, top:10%)
+     z2  ../../assets/videos/clean-footage-with-alpha.mov  alpha cut-out on top
+
+   The alpha .mov is the SAME footage as the base, with the background keyed
+   out. Stacked over the base it re-creates the single subject, but because it
+   sits ABOVE the caption layer, the speaker's head/shoulders OCCLUDE the text
+   -> the words read as if printed on the wall behind her.
+
+   Timings come from subtitles.json (whisper word windows). Words are grouped
+   into <=2-word cues on punctuation boundaries. Each cue uses the standard
+   step-opacity visibility window (snap on at first word, off at last word);
+   individual words pop in at their own start for kinetic life.
+
+   Engine-bug avoidance:
+   - No filter:drop-shadow (partial-opacity glyph-clip bug).
+   - Words are flex items with column-gap (no inter-span whitespace spans).
+   - transform on .w is paint-only (translate/scale) so it never reflows the row.
+*/
+@import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+html,body{margin:0;padding:0}
+body{width:576px;height:1024px;background:#000;position:relative;overflow:hidden}
+.vid{position:absolute;inset:0;width:576px;height:1024px;object-fit:cover}
+
+.cue{position:absolute;left:4%;width:92%;top:10%;z-index:1;
+  display:flex;flex-wrap:wrap;justify-content:center;align-content:flex-start;
+  column-gap:16px;row-gap:0;
+  font-family:'Anton',sans-serif;text-transform:uppercase;
+  font-size:80px;line-height:0.92;font-weight:400;letter-spacing:-1px;
+  color:#fff;
+  opacity:0;animation-name:cueshow;animation-timing-function:linear;
+  animation-fill-mode:forwards}
+@keyframes cueshow{
+  0%, 99.99% { opacity:1 }
+  100% { opacity:0 }
+}
+
+.w{white-space:nowrap;
+  opacity:0;
+  animation-name:pop;animation-duration:0.18s;
+  animation-timing-function:cubic-bezier(.2,1.5,.35,1);
+  animation-fill-mode:forwards}
+@keyframes pop{
+  0%   { opacity:0; transform:translateY(16px) scale(.94) }
+  100% { opacity:1; transform:translateY(0)   scale(1) }
+}
+</style></head><body>
+  <video class="vid" style="z-index:0" src="../../assets/videos/clean-footage.mp4" muted></video>
+
+  <!-- Cue 1: "100,000 followers"  [0.000, 1.700] dur=1.700s -->
+  <div class="cue" style="animation-delay:0.000s;animation-duration:1.700s">
+    <span class="w" style="animation-delay:0.000s">100,000</span>
+    <span class="w" style="animation-delay:1.120s">followers</span>
+  </div>
+  <!-- Cue 2: "from one"  [1.700, 2.400] dur=0.700s -->
+  <div class="cue" style="animation-delay:1.700s;animation-duration:0.700s">
+    <span class="w" style="animation-delay:1.700s">from</span>
+    <span class="w" style="animation-delay:2.140s">one</span>
+  </div>
+  <!-- Cue 3: "video called"  [2.400, 3.260] dur=0.860s -->
+  <div class="cue" style="animation-delay:2.400s;animation-duration:0.860s">
+    <span class="w" style="animation-delay:2.400s">video</span>
+    <span class="w" style="animation-delay:2.800s">called</span>
+  </div>
+  <!-- Cue 4: "a compilation"  [3.260, 4.460] dur=1.200s -->
+  <div class="cue" style="animation-delay:3.260s;animation-duration:1.200s">
+    <span class="w" style="animation-delay:3.260s">a</span>
+    <span class="w" style="animation-delay:3.640s">compilation</span>
+  </div>
+  <!-- Cue 5: "video."  [4.460, 5.220] dur=0.760s -->
+  <div class="cue" style="animation-delay:4.460s;animation-duration:0.760s">
+    <span class="w" style="animation-delay:4.460s">video.</span>
+  </div>
+  <!-- Cue 6: "Take your"  [5.540, 5.840] dur=0.300s -->
+  <div class="cue" style="animation-delay:5.540s;animation-duration:0.300s">
+    <span class="w" style="animation-delay:5.540s">Take</span>
+    <span class="w" style="animation-delay:5.660s">your</span>
+  </div>
+  <!-- Cue 7: "best flips."  [5.840, 6.580] dur=0.740s -->
+  <div class="cue" style="animation-delay:5.840s;animation-duration:0.740s">
+    <span class="w" style="animation-delay:5.840s">best</span>
+    <span class="w" style="animation-delay:6.100s">flips.</span>
+  </div>
+  <!-- Cue 8: "Edit them"  [7.180, 7.740] dur=0.560s -->
+  <div class="cue" style="animation-delay:7.180s;animation-duration:0.560s">
+    <span class="w" style="animation-delay:7.180s">Edit</span>
+    <span class="w" style="animation-delay:7.480s">them</span>
+  </div>
+  <!-- Cue 9: "into one"  [7.740, 8.560] dur=0.820s -->
+  <div class="cue" style="animation-delay:7.740s;animation-duration:0.820s">
+    <span class="w" style="animation-delay:7.740s">into</span>
+    <span class="w" style="animation-delay:8.140s">one</span>
+  </div>
+  <!-- Cue 10: "super cut."  [8.560, 9.460] dur=0.900s -->
+  <div class="cue" style="animation-delay:8.560s;animation-duration:0.900s">
+    <span class="w" style="animation-delay:8.560s">super</span>
+    <span class="w" style="animation-delay:9.220s">cut.</span>
+  </div>
+  <!-- Cue 11: "Show them"  [9.960, 10.260] dur=0.300s -->
+  <div class="cue" style="animation-delay:9.960s;animation-duration:0.300s">
+    <span class="w" style="animation-delay:9.960s">Show</span>
+    <span class="w" style="animation-delay:10.080s">them</span>
+  </div>
+  <!-- Cue 12: "everything you"  [10.260, 11.100] dur=0.840s -->
+  <div class="cue" style="animation-delay:10.260s;animation-duration:0.840s">
+    <span class="w" style="animation-delay:10.260s">everything</span>
+    <span class="w" style="animation-delay:10.840s">you</span>
+  </div>
+  <!-- Cue 13: "do."  [11.100, 11.280] dur=0.180s -->
+  <div class="cue" style="animation-delay:11.100s;animation-duration:0.180s">
+    <span class="w" style="animation-delay:11.100s">do.</span>
+  </div>
+  <!-- Cue 14: "That&apos;s how"  [11.540, 12.020] dur=0.480s -->
+  <div class="cue" style="animation-delay:11.540s;animation-duration:0.480s">
+    <span class="w" style="animation-delay:11.540s">That&apos;s</span>
+    <span class="w" style="animation-delay:11.840s">how</span>
+  </div>
+  <!-- Cue 15: "they remember"  [12.020, 12.800] dur=0.780s -->
+  <div class="cue" style="animation-delay:12.020s;animation-duration:0.780s">
+    <span class="w" style="animation-delay:12.020s">they</span>
+    <span class="w" style="animation-delay:12.280s">remember</span>
+  </div>
+  <!-- Cue 16: "you."  [12.800, 13.140] dur=0.340s -->
+  <div class="cue" style="animation-delay:12.800s;animation-duration:0.340s">
+    <span class="w" style="animation-delay:12.800s">you.</span>
+  </div>
+  <!-- Cue 17: "Link in"  [14.120, 14.880] dur=0.760s -->
+  <div class="cue" style="animation-delay:14.120s;animation-duration:0.760s">
+    <span class="w" style="animation-delay:14.120s">Link</span>
+    <span class="w" style="animation-delay:14.420s">in</span>
+  </div>
+  <!-- Cue 18: "bio."  [14.880, 15.260] dur=0.380s -->
+  <div class="cue" style="animation-delay:14.880s;animation-duration:0.380s">
+    <span class="w" style="animation-delay:14.880s">bio.</span>
+  </div>
+  <video class="vid" style="z-index:2" src="../../assets/videos/clean-footage-with-alpha.mov" muted></video>
+</body></html>
