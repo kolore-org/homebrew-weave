@@ -8,5 +8,5 @@ outputs/
 scripts/__pycache__/
 .superpowers/
 .DS_Store
-
-*.mp4
+# fal API key — local secret, never commit
+.fal.key.donotcommit

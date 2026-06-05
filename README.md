@@ -164,6 +164,15 @@ Helps you bootstrap new projects from a high-level description:
 ```
 Claude asks about your creative goal (intro, lower-third, greeting card), dimensions, and writes starting templates (`template.weave`, `overrides.json`, `manifest.json`) in your working directory.
 
+### 3. Video Generation Skill (`/weave-broll`)
+Generates A/B-roll footage from a text prompt via the **hosted [fal](https://fal.ai) MCP**, then
+overlays your text + sprinkles and records an MP4:
+```bash
+/weave-broll
+```
+Opt-in and bring-your-own-key: you register fal's free, stateless MCP server with your own fal API
+key, and approve every paid model run. Pairs with `/weave-subtitle` for the overlay styling.
+
 ## Examples
 
 | Folder | What it shows | Window | Duration |
