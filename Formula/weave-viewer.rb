@@ -15,9 +15,9 @@ class WeaveViewer < Formula
   # Version is hardcoded in the URL (not #{version}): Homebrew style requires
   # `url` before `version`, so interpolation would resolve empty. The bump
   # workflow/script rewrite the `weave-v<ver>` path segment in lockstep.
-  url "https://github.com/kolore-org/homebrew-weave/releases/download/weave-v0.1.8/weave-viewer-cli-macos-arm64.tar.gz"
-  version "0.1.8"
-  sha256 "effaebbd1562d3efbe4ac7f87969cf73188ac9629c52ce23c343d8846d3df897"
+  url "https://github.com/kolore-org/homebrew-weave/releases/download/weave-v0.2.0/weave-viewer-cli-macos-arm64.tar.gz"
+  version "0.2.0"
+  sha256 "1a436fbac31dff9a66245e4be14175c25ed3142ae224b2def96edd0b055593a2"
   license :cannot_represent # closed binary; examples/docs licensed separately
 
   depends_on arch: :arm64 # v1 is Apple Silicon only
