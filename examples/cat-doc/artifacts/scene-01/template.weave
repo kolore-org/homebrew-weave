@@ -1,0 +1,110 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap');
+html,body{margin:0;padding:0}
+body{width:1280px;height:720px;position:relative;overflow:hidden;background:#000;
+  font-family:'Oswald',sans-serif;color:#fff}
+*{text-shadow:1px 0 0 #000,-1px 0 0 #000,0 1px 0 #000,0 -1px 0 #000,2px 2px 0 rgba(0,0,0,.6)}
+.vid{position:absolute;inset:0;width:1280px;height:720px;object-fit:cover}
+
+/* ---- film grade + vignette ---- */
+.vignette{position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(125% 95% at 50% 46%, rgba(0,0,0,0) 52%, rgba(0,0,0,.6) 100%)}
+.grade{position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg, rgba(8,14,22,.35) 0%, rgba(0,0,0,0) 22%, rgba(0,0,0,0) 64%, rgba(4,7,12,.55) 100%)}
+
+/* ---- top-left field-unit bar ---- */
+.topbar{position:absolute;top:36px;left:48px;display:flex;align-items:center;gap:14px;
+  opacity:0;animation:fade .5s ease-out .2s forwards}
+.rec{width:13px;height:13px;border-radius:50%;background:#ff3b30;
+  animation:blink 1.1s steps(1,end) infinite}
+.topbar .lbl{font-family:'Space Mono',monospace;font-size:17px;letter-spacing:.34em;
+  font-weight:700}
+@keyframes blink{0%,49%{opacity:1}50%,100%{opacity:.12}}
+
+/* ---- title lower-third ---- */
+.titlewrap{position:absolute;left:54px;bottom:90px}
+.tick{position:absolute;left:-18px;top:6px;width:5px;height:118px;background:#7ddcff;
+  transform:scaleY(0);transform-origin:top;animation:grow .6s cubic-bezier(.2,.8,.2,1) .45s forwards}
+.kicker{font-size:21px;font-weight:300;letter-spacing:.52em;color:#7ddcff;
+  text-transform:uppercase;margin:0 0 12px 2px;
+  opacity:0;transform:translateY(14px);animation:rise .7s cubic-bezier(.16,1,.3,1) .55s forwards}
+.t1{font-size:50px;font-weight:300;letter-spacing:.14em;line-height:1;margin:0;
+  text-transform:uppercase;
+  opacity:0;transform:translateY(26px);animation:rise .8s cubic-bezier(.16,1,.3,1) .75s forwards}
+.t2{font-size:104px;font-weight:700;letter-spacing:.02em;line-height:.96;margin:2px 0 0;
+  text-shadow:2px 0 0 #000,-2px 0 0 #000,0 2px 0 #000,0 -2px 0 #000,5px 6px 0 rgba(0,0,0,.72);
+  text-transform:uppercase;
+  opacity:0;transform:translateY(34px);animation:rise .9s cubic-bezier(.16,1,.3,1) .92s forwards}
+
+/* ---- adrenaline HUD (top-right) ---- */
+.hud{position:absolute;top:118px;right:48px;width:300px;padding:18px 20px 20px;
+  background:rgba(8,13,19,.78);border:1px solid rgba(125,220,255,.32);border-radius:4px;
+  opacity:0;transform:translateY(-12px);animation:rise .6s ease-out 1.3s forwards}
+.hud .h{display:flex;justify-content:space-between;align-items:baseline;
+  font-family:'Space Mono',monospace;margin-bottom:14px}
+.hud .h b{font-size:16px;letter-spacing:.16em;font-weight:700}
+.hud .h i{font-size:12px;letter-spacing:.2em;font-style:normal;color:#7ddcff}
+/* equalizer meter */
+.eq{display:flex;align-items:flex-end;gap:5px;height:74px}
+.eq span{flex:1;background:linear-gradient(180deg,#7ddcff,#2f8fb8);border-radius:2px 2px 0 0;
+  transform:scaleY(.12);transform-origin:bottom;
+  animation-name:jit;animation-iteration-count:infinite;animation-timing-function:ease-in-out;
+  animation-direction:alternate}
+.eq .e1{animation-duration:.42s;animation-delay:.0s}
+.eq .e2{animation-duration:.31s;animation-delay:.06s}
+.eq .e3{animation-duration:.5s; animation-delay:.02s}
+.eq .e4{animation-duration:.27s;animation-delay:.1s}
+.eq .e5{animation-duration:.46s;animation-delay:.04s}
+.eq .e6{animation-duration:.34s;animation-delay:.12s}
+.eq .e7{animation-duration:.29s;animation-delay:.08s}
+.eq .e8{animation-duration:.4s; animation-delay:.0s}
+@keyframes jit{from{transform:scaleY(.12)}to{transform:scaleY(1)}}
+/* level fill that climbs + spikes */
+.meter{margin-top:16px}
+.meter .row{display:flex;justify-content:space-between;
+  font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.16em;margin-bottom:7px}
+.track{height:9px;background:rgba(255,255,255,.12);border-radius:5px;overflow:hidden}
+.fill{height:100%;width:8%;border-radius:5px;background:#7ddcff;
+  animation:climb 6s cubic-bezier(.7,0,.85,.2) forwards}
+@keyframes climb{
+  0%{width:8%;background:#7ddcff}
+  55%{width:34%;background:#7ddcff}
+  68%{width:96%;background:#ff4d4d}
+  74%{width:78%;background:#ff4d4d}
+  82%{width:99%;background:#ff4d4d}
+  100%{width:93%;background:#ff4d4d}}
+.crit{position:absolute;right:20px;bottom:18px;font-family:'Space Mono',monospace;
+  font-size:13px;font-weight:700;letter-spacing:.18em;color:#ff4d4d;
+  opacity:0;animation:flick 1.4s steps(2,end) 3.7s infinite}
+@keyframes flick{0%,40%{opacity:1}50%,100%{opacity:.18}}
+
+@keyframes fade{to{opacity:1}}
+@keyframes rise{to{opacity:1;transform:translateY(0)}}
+@keyframes grow{to{transform:scaleY(1)}}
+</style></head><body>
+  <video class="vid" src="../scene-01.mp4" muted></video>
+  <div class="grade"></div>
+  <div class="vignette"></div>
+
+  <div class="topbar"><span class="rec"></span><span class="lbl">REC&nbsp;&nbsp;FIELD UNIT 07</span></div>
+
+  <div class="titlewrap">
+    <div class="tick"></div>
+    <p class="kicker">A Nature Documentary</p>
+    <p class="t1">The Midnight</p>
+    <p class="t2">Zoomies</p>
+  </div>
+
+  <div class="hud">
+    <div class="h"><b>ADRENALINE LEVELS</b><i>LIVE</i></div>
+    <div class="eq">
+      <span class="e1"></span><span class="e2"></span><span class="e3"></span><span class="e4"></span>
+      <span class="e5"></span><span class="e6"></span><span class="e7"></span><span class="e8"></span>
+    </div>
+    <div class="meter">
+      <div class="row"><span>RESTING</span><span>CRITICAL</span></div>
+      <div class="track"><div class="fill"></div></div>
+    </div>
+    <div class="crit">▲ CRITICAL</div>
+  </div>
+</body></html>

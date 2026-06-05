@@ -10,3 +10,7 @@
 *.webm filter=lfs diff=lfs merge=lfs -text
 *.mkv  filter=lfs diff=lfs merge=lfs -text
 *.m4v  filter=lfs diff=lfs merge=lfs -text
+# Audio assets shipped with examples (e.g. generated voiceover) also live in LFS.
+*.mp3  filter=lfs diff=lfs merge=lfs -text
+*.wav  filter=lfs diff=lfs merge=lfs -text
+*.m4a  filter=lfs diff=lfs merge=lfs -text
