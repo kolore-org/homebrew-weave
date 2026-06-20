@@ -1,0 +1,13 @@
+{
+  "_comment": "Cue script for the Shadow Atlas showcase. Each cue names and demonstrates one shadow technique. start/end are seconds; the template carries matching animation-delay/-duration on each .cue. Palette: cyan #19e3ff, magenta #ff2bd6, amber #ffae00, lime #b6ff3b on near-black.",
+  "cues": [
+    { "word": "NEON",    "technique": "text-shadow", "recipe": "layered zero-offset blurs (outer glow)", "start": 0.35,  "end": 1.85 },
+    { "word": "EXTRUDE", "technique": "text-shadow", "recipe": "staircase of 1px hard offsets + soft cast",  "start": 1.85,  "end": 3.35 },
+    { "word": "EMBOSS",  "technique": "text-shadow", "recipe": "light-below + dark-above engraved pair",    "start": 3.35,  "end": 4.85 },
+    { "word": "OUTLINE", "technique": "text-shadow", "recipe": "8-way px stroke (text-stroke unsupported)", "start": 4.85,  "end": 6.35 },
+    { "word": "GLITCH",  "technique": "text-shadow", "recipe": "opposing cyan/magenta chromatic split",      "start": 6.35,  "end": 7.85 },
+    { "word": "STACK",   "technique": "text-shadow", "recipe": "four offset layers in four palette colours", "start": 7.85,  "end": 9.35 },
+    { "word": "HALO",    "technique": "filter",      "recipe": "drop-shadow() stacks two colored blurs",     "start": 9.35,  "end": 10.85 },
+    { "word": "CARD",    "technique": "box-shadow",  "recipe": "ring (spread) + hard offset + inset depth",  "start": 10.85, "end": 12.60 }
+  ]
+}
