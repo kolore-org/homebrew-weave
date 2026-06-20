@@ -114,13 +114,23 @@ Use `/weave-broll`. fal MCP is user-keyed (`.fal.key.donotcommit`, gitignored) a
 
 ## Known weave engine gotchas (hit during this build)
 
-Honor these when editing templates — each has a filed bug report in this folder:
+This project was built against `weave-viewer-cli 0.1.7`; statuses below were re-verified against
+**0.3.1** (vs Chrome 149, 2026-06-20 — evidence in `outputs/oldbugs-recheck/`).
 
-- `bug-report-backdrop-filter-black-preroll.md` — **`backdrop-filter: blur()` → black-frame preroll.** Use opaque panel bg instead.
-- `bug-report-bitcount-font-invisible.md` — Bitcount fonts render invisible (title uses VT323 instead).
-- `bug-report-text-shadow-em-units.md` — `text-shadow` ignores `em` units; **use px**.
-- `bug-report-text-shadow-no-inherit.md` — `text-shadow` does **not** inherit; declare via `*{}` universal selector, override per-tier by class (current scenes do this).
-- Also: CSS does **not** cascade into `<svg>` children (title typewriter = one windowed top-level `<svg>` per glyph); `<br>`/`&nbsp;` unreliable for breaks/spacing; `-webkit-text-stroke` unsupported.
+**Still active — honor these when editing:**
+
+- `bug-report-bitcount-font-invisible.md` — Bitcount fonts render invisible (title uses VT323 instead). *Still reproduces on 0.3.1.*
+- `bug-report-webkit-text-stroke-unsupported.md` — `-webkit-text-stroke` / `-webkit-text-fill-color` not rendered; emulate outlines with a multi-offset `px` `text-shadow`. *Still reproduces on 0.3.1.*
+- Also: CSS does **not** cascade into `<svg>` children (title typewriter = one windowed top-level `<svg>` per glyph); `<br>`/`&nbsp;` unreliable for breaks/spacing.
+
+**Fixed in 0.3.x — the cat-doc workarounds are no longer required (but remain in place, harmless):**
+
+- `backdrop-filter: blur()` → black-frame preroll — **fixed**; records clean from frame 0. (Scenes still use opaque panel bg.)
+- `text-shadow` ignores `em` units — **fixed**; `em` offsets now resolve. (Scenes still use `px`.)
+- `text-shadow` does not inherit — **fixed**; inheritance and the `inherit` keyword both work now. (Scenes still declare directly / via `*{}`.)
+
+See `examples/subtitles-shadowed/` for a showcase of the now-solid shadow stack (text-shadow,
+`filter:drop-shadow()`, `box-shadow`) pixel-checked against Chrome.
 
 ## Known open issue (not yet fixed)
 - Scene-02 data tags read `VELOCITYHIGH` / `STATUSAIRBORNE` / `THREATNONE` — the `&nbsp;` spacer between label and value collapsed (inter-span whitespace drop). Fix with an explicit `margin`/`padding` on the value span if desired.

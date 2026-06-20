@@ -5,6 +5,9 @@
 .weave-cli/
 exploration/
 outputs/
+# Engine bug reports are local-only notes (upstream feedback), not shipped in
+# this public distribution repo. Keep all bug-report-*.md out of git.
+bug-report-*.md
 scripts/__pycache__/
 .superpowers/
 .DS_Store
